@@ -27,44 +27,44 @@ public class Adaptation {
 	@OneToOne
 	private Deployment deployment;
 	
-	public Deployment getDeployment() {
-		return deployment;
+	public int getCpuCount() {
+		return cpuCount;
 	}
 
-	public void setDeployment(Deployment deployment) {
-		this.deployment = deployment;
+	public Deployment getDeployment() {
+		return deployment;
 	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public boolean isAdapt() {
 		return adapt;
+	}
+
+	public boolean isScaleUp() {
+		return scaleUp;
 	}
 	
 	public void setAdapt(boolean adapt) {
 		this.adapt = adapt;
 	}
 	
-	public boolean isScaleUp() {
-		return scaleUp;
+	public void setCpuCount(int cpuCount) {
+		this.cpuCount = cpuCount;
+	}
+	
+	public void setDeployment(Deployment deployment) {
+		this.deployment = deployment;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	public void setScaleUp(boolean scaleUp) {
 		this.scaleUp = scaleUp;
-	}
-	
-	public int getCpuCount() {
-		return cpuCount;
-	}
-	
-	public void setCpuCount(int cpuCount) {
-		this.cpuCount = cpuCount;
 	}
 	
 	public String toString() {

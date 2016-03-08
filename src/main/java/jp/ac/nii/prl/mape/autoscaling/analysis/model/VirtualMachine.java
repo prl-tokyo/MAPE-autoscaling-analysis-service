@@ -37,16 +37,20 @@ public class VirtualMachine {
 	@Min(0)
 	private int cpus;
 	
+	public double getAverageLoadPerCPU(int type) {
+		return getLoad(type) / cpus;
+	}
+
+	public int getCpus() {
+		return cpus;
+	}
+
 	public Deployment getDeployment() {
 		return deployment;
 	}
-
-	public void setDeployment(Deployment deployment) {
-		this.deployment = deployment;
-	}
-
-	public double getAverageLoadPerCPU(int type) {
-		return getLoad(type) / cpus;
+	
+	public String getId() {
+		return id;
 	}
 	
 	private double getLoad(int type) {
@@ -62,48 +66,45 @@ public class VirtualMachine {
 		}
 	}
 	
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public double getLoad1() {
 		return load1;
-	}
-	
-	public void setLoad1(double load1) {
-		this.load1 = load1;
-	}
-	
-	public double getLoad5() {
-		return load5;
-	}
-	
-	public void setLoad5(double load5) {
-		this.load5 = load5;
 	}
 	
 	public double getLoad10() {
 		return load10;
 	}
 	
-	public void setLoad10(double load10) {
-		this.load10 = load10;
-	}
-	
-	public int getCpus() {
-		return cpus;
+	public double getLoad5() {
+		return load5;
 	}
 	
 	public void setCpus(int cpus) {
 		this.cpus = cpus;
 	}
 	
+	public void setDeployment(Deployment deployment) {
+		this.deployment = deployment;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public void setLoad1(double load1) {
+		this.load1 = load1;
+	}
+	
+	public void setLoad10(double load10) {
+		this.load10 = load10;
+	}
+	
+	public void setLoad5(double load5) {
+		this.load5 = load5;
+	}
+	
 	@Override
 	public String toString() {
-		return String.format("VM [%s]: %d vCPUs, load: %4.2f - %4.2f - %4.2f, deployment: %s[%s]", vmId, cpus, load1, load5, load10, deployment.getId(), id);
+		return String.format("VM [%s]: %d vCPUs, load: %4.2f - %4.2f - %4.2f, deployment: %s[%s]", 
+				vmId, cpus, load1, load5, load10, deployment.getId(), id);
 	}
 }

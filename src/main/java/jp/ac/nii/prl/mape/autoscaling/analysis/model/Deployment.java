@@ -28,20 +28,20 @@ public class Deployment {
 		return id;
 	}
 
-	public List<VirtualMachine> getVms() {
-		return vms;
-	}
-
-	public void setVms(List<VirtualMachine> vms) {
-		this.vms = vms;
-	}
-
 	public double getLoadPerCpu(int i) {
 		double load = 0;
 		for (VirtualMachine vm:vms) {
 			load += vm.getAverageLoadPerCPU(1);
 		}
 		return load / vms.size();
+	}
+
+	public List<VirtualMachine> getVms() {
+		return vms;
+	}
+
+	public void setVms(List<VirtualMachine> vms) {
+		this.vms = vms;
 	}
 
 	public int size() {
