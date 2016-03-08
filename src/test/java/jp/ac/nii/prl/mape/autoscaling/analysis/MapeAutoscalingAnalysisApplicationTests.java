@@ -1,4 +1,4 @@
-package jp.ac.nii.prl;
+package jp.ac.nii.prl.mape.autoscaling.analysis;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
