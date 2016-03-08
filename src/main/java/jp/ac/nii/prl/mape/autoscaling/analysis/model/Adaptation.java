@@ -1,4 +1,4 @@
-package jp.ac.nii.prl.mape.autoscaling.analysis;
+package jp.ac.nii.prl.mape.autoscaling.analysis.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
