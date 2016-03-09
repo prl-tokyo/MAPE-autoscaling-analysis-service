@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -113,6 +114,24 @@ public class DeploymentControllerTest {
 		
 		mockMvc.perform(get("/deployment/{id}", 1))
 			.andExpect(status().isNotFound());
+		
+		verify(deploymentService, times(1)).findById(1);
+		verifyNoMoreInteractions(deploymentService);
+	}
+	
+	@Test
+	public void testFindDeploymentFound() throws Exception {
+		Deployment deployment = new Deployment();
+		deployment.setId(1);
+		deployment.setVms(new ArrayList<VirtualMachine>());
+		
+		when(deploymentService.findById(1)).thenReturn(Optional.of(deployment));
+		
+		mockMvc.perform(get("/deployment/{deploymentId}", 1))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(1)))
+			.andExpect(jsonPath("$.vms", hasSize(0)));
 		
 		verify(deploymentService, times(1)).findById(1);
 		verifyNoMoreInteractions(deploymentService);
