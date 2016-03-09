@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -40,6 +41,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.TestContext;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {TestContext.class, MapeAutoscalingAnalysisApplication.class})
@@ -52,6 +54,9 @@ public class DeploymentControllerTest {
 
 	@Autowired
 	private DeploymentService deploymentService;
+	
+	@Autowired
+	private VirtualMachineService virtualMachineService;
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -69,6 +74,7 @@ public class DeploymentControllerTest {
 	@Before
 	public void init() {
 		Mockito.reset(deploymentService);
+		Mockito.reset(virtualMachineService);
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
@@ -91,11 +97,11 @@ public class DeploymentControllerTest {
 		Deployment first = new Deployment();
 		first.setId(1);
 		first.setVms(new ArrayList<VirtualMachine>());
-		System.out.println(first.toString());
+
 		Deployment second = new Deployment();
 		second.setId(2);
 		second.setVms(new ArrayList<VirtualMachine>());
-		System.out.println(second.toString());
+
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
 			.andExpect(status().isOk())
@@ -103,6 +109,48 @@ public class DeploymentControllerTest {
 			.andExpect(jsonPath("$", hasSize(2)))
 			.andExpect(jsonPath("$[0].id", is(1)))
 			.andExpect(jsonPath("$[0].vms", hasSize(0)))
+			.andExpect(jsonPath("$[1].id", is(2)))
+			.andExpect(jsonPath("$[1].vms", hasSize(0)));
+
+		verify(deploymentService, times(1)).findAll();
+		verifyNoMoreInteractions(deploymentService);
+	}
+	
+	@Test
+	public void testFindAllDeploymentsWithVMs() throws Exception {
+		
+		Deployment first = new Deployment();
+		first.setId(1);
+		List<VirtualMachine> vms = new ArrayList<>();
+		VirtualMachine vm1 = new VirtualMachine();
+		vm1.setCpus(4);
+		vm1.setId("1");
+		vm1.setLoad1(3.55);
+		vm1.setLoad5(3.40);
+		vm1.setLoad10(3.25);
+		vm1.setDeployment(first);
+		vms.add(vm1);
+		VirtualMachine vm2 = new VirtualMachine();
+		vm2.setCpus(2);
+		vm2.setId("1");
+		vm2.setLoad1(1.55);
+		vm2.setLoad5(1.40);
+		vm2.setLoad10(1.25);
+		vm2.setDeployment(first);
+		vms.add(vm2);
+		first.setVms(vms);
+
+		Deployment second = new Deployment();
+		second.setId(2);
+		second.setVms(new ArrayList<VirtualMachine>());
+
+		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
+		mockMvc.perform(get("/deployment"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$", hasSize(2)))
+			.andExpect(jsonPath("$[0].id", is(1)))
+			.andExpect(jsonPath("$[0].vms", hasSize(2)))
 			.andExpect(jsonPath("$[1].id", is(2)))
 			.andExpect(jsonPath("$[1].vms", hasSize(0)));
 
