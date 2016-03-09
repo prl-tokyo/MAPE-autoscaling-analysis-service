@@ -39,6 +39,10 @@ public class Deployment {
 	public List<VirtualMachine> getVms() {
 		return vms;
 	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public void setVms(List<VirtualMachine> vms) {
 		this.vms = vms;
