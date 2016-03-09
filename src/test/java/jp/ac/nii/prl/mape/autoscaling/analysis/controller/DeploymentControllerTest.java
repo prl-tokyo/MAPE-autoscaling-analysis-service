@@ -102,7 +102,9 @@ public class DeploymentControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(2)))
 			.andExpect(jsonPath("$[0].id", is(1)))
-			.andExpect(jsonPath("$[0].vms", hasSize(0)));
+			.andExpect(jsonPath("$[0].vms", hasSize(0)))
+			.andExpect(jsonPath("$[1].id", is(2)))
+			.andExpect(jsonPath("$[1].vms", hasSize(0)));
 
 		verify(deploymentService, times(1)).findAll();
 		verifyNoMoreInteractions(deploymentService);
