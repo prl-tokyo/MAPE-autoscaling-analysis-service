@@ -56,7 +56,7 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
-	Deployment getDeployment(@PathVariable Integer deploymentId) {
+	Deployment getDeployment(@PathVariable Integer deploymentId) throws DeploymentNotFoundException {
 		return this.deploymentService.findById(deploymentId).get();
 	}
 	
