@@ -36,7 +36,7 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<?> analyseDeployment(@RequestBody Deployment deployment) {
+	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
 		deploymentService.save(deployment);
 		for (VirtualMachine vm:deployment.getVms()) {
 			vm.setDeployment(deployment);
@@ -51,7 +51,7 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public Collection<Deployment> analyseDeployment() {
+	public Collection<Deployment> getAllDeployments() {
 		return deploymentService.findAll();
 	}
 	
