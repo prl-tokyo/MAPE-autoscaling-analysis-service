@@ -38,6 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.MapeAutoscalingAnalysisApplication;
 import jp.ac.nii.prl.mape.autoscaling.analysis.TestContext;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
@@ -230,6 +231,51 @@ public class DeploymentControllerTest {
 		
 		verify(virtualMachineService, times(1)).findByDeploymentId(1);
 		verifyNoMoreInteractions(virtualMachineService);
+	}
+	
+	@Test
+	public void testGetAnalysis() throws Exception {
+		Deployment first = new Deployment();
+		first.setId(1);
+		List<VirtualMachine> vms = new ArrayList<>();
+		VirtualMachine vm1 = new VirtualMachine();
+		vm1.setCpus(4);
+		vm1.setId("1");
+		vm1.setLoad1(3.55);
+		vm1.setLoad5(3.40);
+		vm1.setLoad10(3.25);
+		vm1.setDeployment(first);
+		vms.add(vm1);
+		VirtualMachine vm2 = new VirtualMachine();
+		vm2.setCpus(2);
+		vm2.setId("2");
+		vm2.setLoad1(1.55);
+		vm2.setLoad5(1.40);
+		vm2.setLoad10(1.25);
+		vm2.setDeployment(first);
+		vms.add(vm2);
+		first.setVms(vms);
+		
+		Adaptation adaptation = new Adaptation();
+		adaptation.setId(1);
+		adaptation.setAdapt(true);
+		adaptation.setCpuCount(2);
+		adaptation.setScaleUp(true);
+		adaptation.setDeployment(first);
+		
+		when(deploymentService.analyse(first)).thenReturn(adaptation);
+		when(deploymentService.findById(1)).thenReturn(Optional.of(first));
+		
+		mockMvc.perform(get("/deployment/{deploymentId}/analysis", 1))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.adapt", is(true)))
+			.andExpect(jsonPath("$.scaleUp", is(true)))
+			.andExpect(jsonPath("$.cpuCount", is(2)));
+		
+		verify(deploymentService, times(1)).analyse(first);
+		verify(deploymentService, times(1)).findById(1);
+		verifyNoMoreInteractions(deploymentService);
 	}
 	
 	protected String json(Object o) throws IOException {
