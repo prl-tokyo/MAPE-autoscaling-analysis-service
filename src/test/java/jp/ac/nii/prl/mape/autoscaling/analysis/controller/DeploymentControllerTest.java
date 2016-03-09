@@ -1,15 +1,15 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.controller;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -35,12 +36,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.MapeAutoscalingAnalysisApplication;
+import jp.ac.nii.prl.mape.autoscaling.analysis.TestContext;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MapeAutoscalingAnalysisApplication.class)
+@SpringApplicationConfiguration(classes = {TestContext.class, MapeAutoscalingAnalysisApplication.class})
 @WebAppConfiguration
 public class DeploymentControllerTest {
 
@@ -49,8 +51,7 @@ public class DeploymentControllerTest {
 	private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
 	@Autowired
-	@Mock
-	private DeploymentService deploymentServiceMock;
+	private DeploymentService deploymentService;
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -67,6 +68,7 @@ public class DeploymentControllerTest {
 	
 	@Before
 	public void init() {
+		Mockito.reset(deploymentService);
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
@@ -93,17 +95,17 @@ public class DeploymentControllerTest {
 		Deployment second = new Deployment();
 		second.setId(2);
 		second.setVms(new ArrayList<VirtualMachine>());
-		deploymentServiceMock.save(first);
-		deploymentServiceMock.save(second);
 		System.out.println(second.toString());
-		when(deploymentServiceMock.findAll()).thenReturn(Arrays.asList(first, second));
+		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$", hasSize(2)));
-		
-		verify(deploymentServiceMock, times(1)).findAll();
-		verifyNoMoreInteractions(deploymentServiceMock);
+			.andExpect(jsonPath("$", hasSize(2)))
+			.andExpect(jsonPath("$[0].id", is(1)))
+			.andExpect(jsonPath("$[0].vms", hasSize(0)));
+
+		verify(deploymentService, times(1)).findAll();
+		verifyNoMoreInteractions(deploymentService);
 	}
 	
 	protected String json(Object o) throws IOException {
