@@ -211,7 +211,6 @@ public class DeploymentControllerTest {
 		vms.add(vm2);
 		first.setVms(vms);
 		
-		when(deploymentService.findAll()).thenReturn(Arrays.asList(first));
 		when(virtualMachineService.findByDeploymentId(1)).thenReturn(vms);
 		
 		mockMvc.perform(get("/deployment/{deploymentId}/vms", 1))
