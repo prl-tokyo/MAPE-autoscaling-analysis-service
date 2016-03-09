@@ -187,6 +187,51 @@ public class DeploymentControllerTest {
 		verifyNoMoreInteractions(deploymentService);
 	}
 	
+	@Test
+	public void testFindVMsInDeployment() throws Exception {
+		Deployment first = new Deployment();
+		first.setId(1);
+		List<VirtualMachine> vms = new ArrayList<>();
+		VirtualMachine vm1 = new VirtualMachine();
+		vm1.setCpus(4);
+		vm1.setId("1");
+		vm1.setLoad1(3.55);
+		vm1.setLoad5(3.40);
+		vm1.setLoad10(3.25);
+		vm1.setDeployment(first);
+		vms.add(vm1);
+		VirtualMachine vm2 = new VirtualMachine();
+		vm2.setCpus(2);
+		vm2.setId("2");
+		vm2.setLoad1(1.55);
+		vm2.setLoad5(1.40);
+		vm2.setLoad10(1.25);
+		vm2.setDeployment(first);
+		vms.add(vm2);
+		first.setVms(vms);
+		
+		when(deploymentService.findAll()).thenReturn(Arrays.asList(first));
+		when(virtualMachineService.findByDeploymentId(1)).thenReturn(vms);
+		
+		mockMvc.perform(get("/deployment/{deploymentId}/vms", 1))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$", hasSize(2)))
+			.andExpect(jsonPath("$[0].id", is("1")))
+			.andExpect(jsonPath("$[0].cpus", is(4)))
+			.andExpect(jsonPath("$[0].load1", is(3.55)))
+			.andExpect(jsonPath("$[0].load5", is(3.40)))
+			.andExpect(jsonPath("$[0].load10", is(3.25)))
+			.andExpect(jsonPath("$[1].id", is("2")))
+			.andExpect(jsonPath("$[1].cpus", is(2)))
+			.andExpect(jsonPath("$[1].load1", is(1.55)))
+			.andExpect(jsonPath("$[1].load5", is(1.40)))
+			.andExpect(jsonPath("$[1].load10", is(1.25)));
+		
+		verify(virtualMachineService, times(1)).findByDeploymentId(1);
+		verifyNoMoreInteractions(virtualMachineService);
+	}
+	
 	protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
         this.mappingJackson2HttpMessageConverter.write(
