@@ -1,5 +1,7 @@
 # MAPE Autoscaling Analysis Service
 
+[![Build Status](https://travis-ci.org/prl-tokyo/MAPE-autoscaling-analysis-service.svg?branch=master)](https://travis-ci.org/prl-tokyo/MAPE-autoscaling-analysis-service)
+
 This is a REST web service for autoscaling analysis, meant to be used as the A in a MAPE-K loop.
 
 It takes a deployment model in JSON, analyses it, determines whether autoscaling is required, and 
