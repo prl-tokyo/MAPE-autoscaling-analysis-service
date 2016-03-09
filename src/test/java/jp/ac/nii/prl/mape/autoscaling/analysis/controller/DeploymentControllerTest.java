@@ -107,6 +107,17 @@ public class DeploymentControllerTest {
 		verifyNoMoreInteractions(deploymentService);
 	}
 	
+	@Test
+	public void testFindDeploymentHttpStatusCode404() throws Exception {
+		when(deploymentService.findById(1)).thenThrow(new DeploymentNotFoundException(""));
+		
+		mockMvc.perform(get("/deployment/{id}", 1))
+			.andExpect(status().isNotFound());
+		
+		verify(deploymentService, times(1)).findById(1);
+		verifyNoMoreInteractions(deploymentService);
+	}
+	
 	protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
         this.mappingJackson2HttpMessageConverter.write(
