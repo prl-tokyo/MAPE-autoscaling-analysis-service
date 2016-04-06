@@ -16,4 +16,6 @@ public interface DeploymentService {
 	
 	Adaptation analyse(Deployment deployment);
 	
+	Double getAverageLoadPerCPU(Integer deploymentId);
+	
 }

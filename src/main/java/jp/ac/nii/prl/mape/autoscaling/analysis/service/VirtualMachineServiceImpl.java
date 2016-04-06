@@ -24,4 +24,10 @@ public class VirtualMachineServiceImpl implements VirtualMachineService {
 		return virtualMachineRepository.findByDeploymentId(deploymentId);
 	}
 
+	@Override
+	public Double getAverageLoadPerCPU() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

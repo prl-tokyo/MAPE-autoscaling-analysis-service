@@ -9,5 +9,7 @@ public interface VirtualMachineService {
 	Instance save(Instance virtualMachine);
 
 	Collection<Instance> findByDeploymentId(Integer deploymentId);
+	
+	Double getAverageLoadPerCPU();
 
 }

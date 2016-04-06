@@ -32,17 +32,6 @@ public class Instance {
 	@NotNull
 	private Double instLoad;
 
-	@Min(0)
-	private int cpus;
-
-	public double getAverageLoadPerCPU() {
-		return getLoad() / cpus;
-	}
-
-	public int getCpus() {
-		return cpus;
-	}
-
 	public Deployment getDeployment() {
 		return deployment;
 	}
@@ -65,10 +54,6 @@ public class Instance {
 
 	private double getLoad() {
 		return instLoad;
-	}
-
-	public void setCpus(int cpus) {
-		this.cpus = cpus;
 	}
 	
 	public void setDeployment(Deployment deployment) {
@@ -97,7 +82,7 @@ public class Instance {
 	
 	@Override
 	public String toString() {
-		return String.format("VM [%s]: %d vCPUs, load: %4.2f, deployment: %s[%s]", 
-				vmId, cpus, instLoad, deployment.getId(), instID);
+		return String.format("VM [%s]: type: %s, load: %4.2f, deployment: %s[%s]", 
+				vmId, instType, instLoad, deployment.getId(), instID);
 	}
 }

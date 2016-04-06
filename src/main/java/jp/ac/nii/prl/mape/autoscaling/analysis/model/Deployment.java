@@ -28,14 +28,6 @@ public class Deployment {
 		return id;
 	}
 
-	public double getLoadPerCpu(int i) {
-		double load = 0;
-		for (Instance vm:instances) {
-			load += vm.getAverageLoadPerCPU();
-		}
-		return load / instances.size();
-	}
-
 	public List<Instance> getInstances() {
 		return instances;
 	}

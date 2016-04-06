@@ -16,6 +16,9 @@ public class DeploymentServiceImpl implements DeploymentService {
 	@Autowired
 	private DeploymentRepository deploymentRepository;
 	
+	@Autowired
+	private VirtualMachineService instanceService;
+	
 	@Override
 	public Deployment save(Deployment deployment) {
 		return deploymentRepository.save(deployment);
@@ -33,7 +36,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 
 	@Override
 	public Adaptation analyse(Deployment deployment) {
-		double load = deployment.getLoadPerCpu(1);
+		double load = getAverageLoadPerCPU(deployment.getId());
 		Adaptation adaptation = new Adaptation();
 		if (load >= 2) {
 			adaptation.setAdapt(true);
@@ -47,6 +50,11 @@ public class DeploymentServiceImpl implements DeploymentService {
 			adaptation.setAdapt(false);
 		}
 		return adaptation;
+	}
+
+	@Override
+	public Double getAverageLoadPerCPU(Integer deploymentId) {
+		return null;
 	}
 
 }
