@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.repository.InstanceTypeRepository;
 
-@Service("InstanceTypeService")
+@Service("instanceTypeService")
 public class InstanceTypeServiceImpl implements InstanceTypeService {
 
 	@Autowired

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.repository.InstanceRepository;
 
-@Service("virtualMachineService")
+@Service("instanceService")
 public class InstanceServiceImpl implements InstanceService {
 
 	@Autowired
