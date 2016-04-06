@@ -42,7 +42,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
-import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {TestContext.class, MapeAutoscalingAnalysisApplication.class})
@@ -57,7 +57,7 @@ public class DeploymentControllerTest {
 	private DeploymentService deploymentService;
 	
 	@Autowired
-	private VirtualMachineService virtualMachineService;
+	private InstanceService virtualMachineService;
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;

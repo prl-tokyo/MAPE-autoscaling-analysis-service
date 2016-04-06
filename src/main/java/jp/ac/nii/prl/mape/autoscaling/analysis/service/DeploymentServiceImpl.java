@@ -17,7 +17,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 	private DeploymentRepository deploymentRepository;
 	
 	@Autowired
-	private VirtualMachineService instanceService;
+	private InstanceService instanceService;
 	
 	@Override
 	public Deployment save(Deployment deployment) {

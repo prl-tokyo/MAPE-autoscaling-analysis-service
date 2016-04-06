@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 
-public interface VirtualMachineService {
+public interface InstanceService {
 	
 	Instance save(Instance virtualMachine);
 

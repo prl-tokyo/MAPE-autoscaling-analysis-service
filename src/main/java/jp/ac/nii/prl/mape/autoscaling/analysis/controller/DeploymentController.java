@@ -18,7 +18,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
-import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
 
 @RestController
 @RequestMapping(value="/deployment")
@@ -26,11 +26,11 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
 public class DeploymentController {
 
 	private final DeploymentService deploymentService;
-	private final VirtualMachineService virtualMachineService;
+	private final InstanceService virtualMachineService;
 	
 	@Autowired
 	DeploymentController(DeploymentService deploymentService, 
-			VirtualMachineService virtualMachineService) {
+			InstanceService virtualMachineService) {
 		this.deploymentService = deploymentService;
 		this.virtualMachineService = virtualMachineService;
 	}

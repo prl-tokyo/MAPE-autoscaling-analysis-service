@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
-import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
 
 @Configuration
 public class TestContext {
@@ -16,7 +16,7 @@ public class TestContext {
 	}
 	
 	@Bean
-	public VirtualMachineService virtualMachineService() {
-		return Mockito.mock(VirtualMachineService.class);
+	public InstanceService virtualMachineService() {
+		return Mockito.mock(InstanceService.class);
 	}
 }

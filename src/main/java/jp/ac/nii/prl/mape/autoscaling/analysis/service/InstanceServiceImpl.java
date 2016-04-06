@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
-import jp.ac.nii.prl.mape.autoscaling.analysis.repository.VirtualMachineRepository;
+import jp.ac.nii.prl.mape.autoscaling.analysis.repository.InstanceRepository;
 
 @Service("virtualMachineService")
-public class VirtualMachineServiceImpl implements VirtualMachineService {
+public class InstanceServiceImpl implements InstanceService {
 
 	@Autowired
-	private VirtualMachineRepository virtualMachineRepository;
+	private InstanceRepository virtualMachineRepository;
 	
 	@Override
 	public Instance save(Instance virtualMachine) {
