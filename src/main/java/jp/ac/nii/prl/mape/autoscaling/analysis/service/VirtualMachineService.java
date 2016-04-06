@@ -2,12 +2,12 @@ package jp.ac.nii.prl.mape.autoscaling.analysis.service;
 
 import java.util.Collection;
 
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 
 public interface VirtualMachineService {
 	
-	VirtualMachine save(VirtualMachine virtualMachine);
+	Instance save(Instance virtualMachine);
 
-	Collection<VirtualMachine> findByDeploymentId(Integer deploymentId);
+	Collection<Instance> findByDeploymentId(Integer deploymentId);
 
 }

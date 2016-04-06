@@ -40,7 +40,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.MapeAutoscalingAnalysisApplicatio
 import jp.ac.nii.prl.mape.autoscaling.analysis.TestContext;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
 
@@ -83,7 +83,7 @@ public class DeploymentControllerTest {
 	@Test
 	public void testCreateDeployment() throws Exception {
 		Deployment deployment = new Deployment();
-		deployment.setVms(new ArrayList<VirtualMachine>());
+		deployment.setVms(new ArrayList<Instance>());
 		String content = json(deployment);
 		
 		mockMvc.perform(post("/deployment")
@@ -97,11 +97,11 @@ public class DeploymentControllerTest {
 		
 		Deployment first = new Deployment();
 		first.setId(1);
-		first.setVms(new ArrayList<VirtualMachine>());
+		first.setVms(new ArrayList<Instance>());
 
 		Deployment second = new Deployment();
 		second.setId(2);
-		second.setVms(new ArrayList<VirtualMachine>());
+		second.setVms(new ArrayList<Instance>());
 
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
@@ -122,8 +122,8 @@ public class DeploymentControllerTest {
 		
 		Deployment first = new Deployment();
 		first.setId(1);
-		List<VirtualMachine> vms = new ArrayList<>();
-		VirtualMachine vm1 = new VirtualMachine();
+		List<Instance> vms = new ArrayList<>();
+		Instance vm1 = new Instance();
 		vm1.setCpus(4);
 		vm1.setId("1");
 		vm1.setLoad1(3.55);
@@ -131,7 +131,7 @@ public class DeploymentControllerTest {
 		vm1.setLoad10(3.25);
 		vm1.setDeployment(first);
 		vms.add(vm1);
-		VirtualMachine vm2 = new VirtualMachine();
+		Instance vm2 = new Instance();
 		vm2.setCpus(2);
 		vm2.setId("1");
 		vm2.setLoad1(1.55);
@@ -143,7 +143,7 @@ public class DeploymentControllerTest {
 
 		Deployment second = new Deployment();
 		second.setId(2);
-		second.setVms(new ArrayList<VirtualMachine>());
+		second.setVms(new ArrayList<Instance>());
 
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
@@ -174,7 +174,7 @@ public class DeploymentControllerTest {
 	public void testFindDeploymentFound() throws Exception {
 		Deployment deployment = new Deployment();
 		deployment.setId(1);
-		deployment.setVms(new ArrayList<VirtualMachine>());
+		deployment.setVms(new ArrayList<Instance>());
 		
 		when(deploymentService.findById(1)).thenReturn(Optional.of(deployment));
 		
@@ -192,8 +192,8 @@ public class DeploymentControllerTest {
 	public void testFindVMsInDeployment() throws Exception {
 		Deployment first = new Deployment();
 		first.setId(1);
-		List<VirtualMachine> vms = new ArrayList<>();
-		VirtualMachine vm1 = new VirtualMachine();
+		List<Instance> vms = new ArrayList<>();
+		Instance vm1 = new Instance();
 		vm1.setCpus(4);
 		vm1.setId("1");
 		vm1.setLoad1(3.55);
@@ -201,7 +201,7 @@ public class DeploymentControllerTest {
 		vm1.setLoad10(3.25);
 		vm1.setDeployment(first);
 		vms.add(vm1);
-		VirtualMachine vm2 = new VirtualMachine();
+		Instance vm2 = new Instance();
 		vm2.setCpus(2);
 		vm2.setId("2");
 		vm2.setLoad1(1.55);
@@ -236,8 +236,8 @@ public class DeploymentControllerTest {
 	public void testGetAnalysis() throws Exception {
 		Deployment first = new Deployment();
 		first.setId(1);
-		List<VirtualMachine> vms = new ArrayList<>();
-		VirtualMachine vm1 = new VirtualMachine();
+		List<Instance> vms = new ArrayList<>();
+		Instance vm1 = new Instance();
 		vm1.setCpus(4);
 		vm1.setId("1");
 		vm1.setLoad1(3.55);
@@ -245,7 +245,7 @@ public class DeploymentControllerTest {
 		vm1.setLoad10(3.25);
 		vm1.setDeployment(first);
 		vms.add(vm1);
-		VirtualMachine vm2 = new VirtualMachine();
+		Instance vm2 = new Instance();
 		vm2.setCpus(2);
 		vm2.setId("2");
 		vm2.setLoad1(1.55);

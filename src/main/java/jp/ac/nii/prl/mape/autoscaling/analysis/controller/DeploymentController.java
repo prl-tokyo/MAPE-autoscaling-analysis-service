@@ -16,7 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
 
@@ -38,7 +38,7 @@ public class DeploymentController {
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
 		deploymentService.save(deployment);
-		for (VirtualMachine vm:deployment.getVms()) {
+		for (Instance vm:deployment.getVms()) {
 			vm.setDeployment(deployment);
 			virtualMachineService.save(vm);
 		}
@@ -61,7 +61,7 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(value = "/{deploymentId}/vms", method=RequestMethod.GET)
-	Collection<VirtualMachine> getVirtualMachines(@PathVariable Integer deploymentId) {
+	Collection<Instance> getVirtualMachines(@PathVariable Integer deploymentId) {
 		return this.virtualMachineService.findByDeploymentId(deploymentId);
 	}
 	

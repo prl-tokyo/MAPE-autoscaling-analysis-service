@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.repository.VirtualMachineRepository;
 
 @Service("virtualMachineService")
@@ -15,12 +15,12 @@ public class VirtualMachineServiceImpl implements VirtualMachineService {
 	private VirtualMachineRepository virtualMachineRepository;
 	
 	@Override
-	public VirtualMachine save(VirtualMachine virtualMachine) {
+	public Instance save(Instance virtualMachine) {
 		return virtualMachineRepository.save(virtualMachine);
 	}
 
 	@Override
-	public Collection<VirtualMachine> findByDeploymentId(Integer deploymentId) {
+	public Collection<Instance> findByDeploymentId(Integer deploymentId) {
 		return virtualMachineRepository.findByDeploymentId(deploymentId);
 	}
 

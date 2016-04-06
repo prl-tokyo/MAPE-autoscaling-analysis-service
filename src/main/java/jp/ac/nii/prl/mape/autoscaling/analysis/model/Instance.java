@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class VirtualMachine {
+public class Instance {
 	public static final int LOAD1 = 0;
 	public static final int LOAD5 = 1;
 	public static final int LOAD10 = 2;
