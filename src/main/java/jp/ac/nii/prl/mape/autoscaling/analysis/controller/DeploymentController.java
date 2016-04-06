@@ -38,7 +38,7 @@ public class DeploymentController {
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
 		deploymentService.save(deployment);
-		for (Instance vm:deployment.getVms()) {
+		for (Instance vm:deployment.getInstances()) {
 			vm.setDeployment(deployment);
 			virtualMachineService.save(vm);
 		}

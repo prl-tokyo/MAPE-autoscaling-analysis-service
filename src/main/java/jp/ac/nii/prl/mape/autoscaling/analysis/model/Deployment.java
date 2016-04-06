@@ -22,7 +22,7 @@ public class Deployment {
 	private Adaptation adaptation;
 
 	@OneToMany(mappedBy="deployment")
-	private List<Instance> vms;
+	private List<Instance> instances;
 
 	public Integer getId() {
 		return id;
@@ -30,30 +30,30 @@ public class Deployment {
 
 	public double getLoadPerCpu(int i) {
 		double load = 0;
-		for (Instance vm:vms) {
+		for (Instance vm:instances) {
 			load += vm.getAverageLoadPerCPU();
 		}
-		return load / vms.size();
+		return load / instances.size();
 	}
 
-	public List<Instance> getVms() {
-		return vms;
+	public List<Instance> getInstances() {
+		return instances;
 	}
 	
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public void setVms(List<Instance> vms) {
-		this.vms = vms;
+	public void setInstances(List<Instance> instances) {
+		this.instances = instances;
 	}
 
 	public int size() {
-		return vms.size();
+		return instances.size();
 	}
 	
 	public String toString() {
-		return String.format("Deployment %d with %d virtual machines", id, vms.size());
+		return String.format("Deployment %d with %d virtual machines", id, instances.size());
 	}
 
 }

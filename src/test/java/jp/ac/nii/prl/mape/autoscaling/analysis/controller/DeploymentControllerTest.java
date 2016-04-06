@@ -83,7 +83,7 @@ public class DeploymentControllerTest {
 	@Test
 	public void testCreateDeployment() throws Exception {
 		Deployment deployment = new Deployment();
-		deployment.setVms(new ArrayList<Instance>());
+		deployment.setInstances(new ArrayList<Instance>());
 		String content = json(deployment);
 		
 		mockMvc.perform(post("/deployment")
@@ -97,11 +97,11 @@ public class DeploymentControllerTest {
 		
 		Deployment first = new Deployment();
 		first.setId(1);
-		first.setVms(new ArrayList<Instance>());
+		first.setInstances(new ArrayList<Instance>());
 
 		Deployment second = new Deployment();
 		second.setId(2);
-		second.setVms(new ArrayList<Instance>());
+		second.setInstances(new ArrayList<Instance>());
 
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
@@ -109,9 +109,9 @@ public class DeploymentControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(2)))
 			.andExpect(jsonPath("$[0].id", is(1)))
-			.andExpect(jsonPath("$[0].vms", hasSize(0)))
+			.andExpect(jsonPath("$[0].instances", hasSize(0)))
 			.andExpect(jsonPath("$[1].id", is(2)))
-			.andExpect(jsonPath("$[1].vms", hasSize(0)));
+			.andExpect(jsonPath("$[1].instances", hasSize(0)));
 
 		verify(deploymentService, times(1)).findAll();
 		verifyNoMoreInteractions(deploymentService);
@@ -135,11 +135,11 @@ public class DeploymentControllerTest {
 		vm2.setLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
-		first.setVms(vms);
+		first.setInstances(vms);
 
 		Deployment second = new Deployment();
 		second.setId(2);
-		second.setVms(new ArrayList<Instance>());
+		second.setInstances(new ArrayList<Instance>());
 
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
@@ -147,9 +147,9 @@ public class DeploymentControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(2)))
 			.andExpect(jsonPath("$[0].id", is(1)))
-			.andExpect(jsonPath("$[0].vms", hasSize(2)))
+			.andExpect(jsonPath("$[0].instances", hasSize(2)))
 			.andExpect(jsonPath("$[1].id", is(2)))
-			.andExpect(jsonPath("$[1].vms", hasSize(0)));
+			.andExpect(jsonPath("$[1].instances", hasSize(0)));
 
 		verify(deploymentService, times(1)).findAll();
 		verifyNoMoreInteractions(deploymentService);
@@ -170,7 +170,7 @@ public class DeploymentControllerTest {
 	public void testFindDeploymentFound() throws Exception {
 		Deployment deployment = new Deployment();
 		deployment.setId(1);
-		deployment.setVms(new ArrayList<Instance>());
+		deployment.setInstances(new ArrayList<Instance>());
 		
 		when(deploymentService.findById(1)).thenReturn(Optional.of(deployment));
 		
@@ -178,7 +178,7 @@ public class DeploymentControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.id", is(1)))
-			.andExpect(jsonPath("$.vms", hasSize(0)));
+			.andExpect(jsonPath("$.instances", hasSize(0)));
 		
 		verify(deploymentService, times(1)).findById(1);
 		verifyNoMoreInteractions(deploymentService);
@@ -201,7 +201,7 @@ public class DeploymentControllerTest {
 		vm2.setLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
-		first.setVms(vms);
+		first.setInstances(vms);
 		
 		when(virtualMachineService.findByDeploymentId(1)).thenReturn(vms);
 		
@@ -237,7 +237,7 @@ public class DeploymentControllerTest {
 		vm2.setLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
-		first.setVms(vms);
+		first.setInstances(vms);
 		
 		Adaptation adaptation = new Adaptation();
 		adaptation.setId(1);
