@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.repository.DeploymentRepository;
 
 @Service("deploymentService")
@@ -54,7 +55,12 @@ public class DeploymentServiceImpl implements DeploymentService {
 
 	@Override
 	public Double getAverageLoadPerCPU(Integer deploymentId) {
-		return null;
+		Collection<Instance> instances = instanceService.findByDeploymentId(deploymentId);
+		Double load = 0d;
+		for (Instance instance:instances) {
+			load += instance.getInstLoad();
+		}
+		return load / instances.size();
 	}
 
 }

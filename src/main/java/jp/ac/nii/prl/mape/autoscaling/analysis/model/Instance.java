@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,10 +17,10 @@ public class Instance {
 	@ManyToOne
 	private Deployment deployment;
 	
+	@Id
 	@GeneratedValue
 	@JsonIgnore
-	@Id
-	private Integer vmId;
+	private Integer id;
 	
 	@NotEmpty
 	private String instID;
@@ -29,17 +28,25 @@ public class Instance {
 	@NotEmpty
 	private String instType;
 	
+	@JsonIgnore
+	@ManyToOne
+	private InstanceType instanceType;
+	
 	@NotNull
 	private Double instLoad;
 
 	public Deployment getDeployment() {
 		return deployment;
 	}
-	
-	public String getId() {
-		return instID;
+
+	public Integer getId() {
+		return id;
 	}
-	
+
+	public InstanceType getInstanceType() {
+		return instanceType;
+	}
+
 	public String getInstID() {
 		return instID;
 	}
@@ -51,17 +58,17 @@ public class Instance {
 	public String getInstType() {
 		return instType;
 	}
-
-	private double getLoad() {
-		return instLoad;
-	}
 	
 	public void setDeployment(Deployment deployment) {
 		this.deployment = deployment;
 	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	
-	public void setId(String id) {
-		this.instID = id;
+	public void setInstanceType(InstanceType instanceType) {
+		this.instanceType = instanceType;
 	}
 	
 	public void setInstID(String instID) {
@@ -76,13 +83,9 @@ public class Instance {
 		this.instType = instType;
 	}
 	
-	public void setLoad(Double load) {
-		this.instLoad = load;
-	}
-	
 	@Override
 	public String toString() {
 		return String.format("VM [%s]: type: %s, load: %4.2f, deployment: %s[%s]", 
-				vmId, instType, instLoad, deployment.getId(), instID);
+				id, instType, instLoad, deployment.getId(), instID);
 	}
 }

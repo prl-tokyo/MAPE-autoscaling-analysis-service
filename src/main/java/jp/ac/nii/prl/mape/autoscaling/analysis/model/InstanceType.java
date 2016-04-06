@@ -1,9 +1,12 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +20,7 @@ public class InstanceType {
 	@JsonIgnore
 	@GeneratedValue
 	@Id
-	private Integer ID;
+	private Integer id;
 	
 	@NotEmpty
 	private String typeID;
@@ -29,20 +32,28 @@ public class InstanceType {
 	@DecimalMin("1")
 	private Integer typeCPUs;
 	
+	@JsonIgnore
+	@OneToMany
+	private List<Instance> instances;
+	
 	@NotNull
 	private Double typeRAM;
-	
+
 	@NotNull
 	private Double typeCost;
-	
+
 	public Deployment getDeployment() {
 		return deployment;
 	}
 	
-	public Integer getID() {
-		return ID;
+	public Integer getId() {
+		return id;
 	}
-
+	
+	public List<Instance> getInstances() {
+		return instances;
+	}
+	
 	public Double getTypeCost() {
 		return typeCost;
 	}
@@ -63,8 +74,12 @@ public class InstanceType {
 		this.deployment = deployment;
 	}
 
-	public void setID(Integer iD) {
-		ID = iD;
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setInstances(List<Instance> instances) {
+		this.instances = instances;
 	}
 
 	public void setTypeCost(Double typeCost) {

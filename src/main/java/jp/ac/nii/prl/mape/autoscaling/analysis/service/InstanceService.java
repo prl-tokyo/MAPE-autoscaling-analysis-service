@@ -6,10 +6,12 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 
 public interface InstanceService {
 	
-	Instance save(Instance virtualMachine);
+	Instance save(Instance instance);
 
 	Collection<Instance> findByDeploymentId(Integer deploymentId);
 	
-	Double getAverageLoadPerCPU();
+	Double getAverageLoadPerCPU(Integer instanceId);
+
+	void setInstanceType(Instance instance);
 
 }

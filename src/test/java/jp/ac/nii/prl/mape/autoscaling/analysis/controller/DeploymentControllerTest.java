@@ -43,6 +43,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceTypeService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {TestContext.class, MapeAutoscalingAnalysisApplication.class})
@@ -58,6 +59,9 @@ public class DeploymentControllerTest {
 	
 	@Autowired
 	private InstanceService virtualMachineService;
+	
+	@Autowired
+	private InstanceTypeService instanceTypeService;
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -124,13 +128,13 @@ public class DeploymentControllerTest {
 		first.setId(1);
 		List<Instance> vms = new ArrayList<>();
 		Instance vm1 = new Instance();
-		vm1.setId("1");
-		vm1.setLoad(3.55);
+		vm1.setInstID("1");
+		vm1.setInstLoad(3.55);
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
-		vm2.setId("1");
-		vm2.setLoad(1.55);
+		vm2.setInstID("1");
+		vm2.setInstLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
 		first.setInstances(vms);
@@ -188,13 +192,13 @@ public class DeploymentControllerTest {
 		first.setId(1);
 		List<Instance> vms = new ArrayList<>();
 		Instance vm1 = new Instance();
-		vm1.setId("1");
-		vm1.setLoad(3.55);
+		vm1.setInstID("1");
+		vm1.setInstLoad(3.55);
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
-		vm2.setId("2");
-		vm2.setLoad(1.55);
+		vm2.setInstID("2");
+		vm2.setInstLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
 		first.setInstances(vms);
@@ -220,13 +224,13 @@ public class DeploymentControllerTest {
 		first.setId(1);
 		List<Instance> vms = new ArrayList<>();
 		Instance vm1 = new Instance();
-		vm1.setId("1");
-		vm1.setLoad(3.55);
+		vm1.setInstID("1");
+		vm1.setInstLoad(3.55);
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
-		vm2.setId("2");
-		vm2.setLoad(1.55);
+		vm2.setInstID("2");
+		vm2.setInstLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
 		first.setInstances(vms);
