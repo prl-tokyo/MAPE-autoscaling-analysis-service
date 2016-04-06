@@ -3,6 +3,10 @@ package jp.ac.nii.prl.mape.autoscaling.analysis.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,12 +18,16 @@ public class InstanceType {
 	@Id
 	private Integer ID;
 	
+	@NotEmpty
 	private String typeID;
 	
+	@DecimalMin("1")
 	private Integer typeCPUs;
 	
+	@NotNull
 	private Double typeRAM;
 	
+	@NotNull
 	private Double typeCost;
 
 	public Integer getID() {
