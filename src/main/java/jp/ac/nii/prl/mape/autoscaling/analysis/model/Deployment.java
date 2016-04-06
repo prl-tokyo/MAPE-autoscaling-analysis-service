@@ -23,6 +23,13 @@ public class Deployment {
 
 	@OneToMany(mappedBy="deployment")
 	private List<Instance> instances;
+	
+	@OneToMany(mappedBy="deployment")
+	private List<InstanceType> instanceTypes;
+
+	public Adaptation getAdaptation() {
+		return adaptation;
+	}
 
 	public Integer getId() {
 		return id;
@@ -31,13 +38,25 @@ public class Deployment {
 	public List<Instance> getInstances() {
 		return instances;
 	}
-	
+
+	public List<InstanceType> getInstanceTypes() {
+		return instanceTypes;
+	}
+
+	public void setAdaptation(Adaptation adaptation) {
+		this.adaptation = adaptation;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 	public void setInstances(List<Instance> instances) {
 		this.instances = instances;
+	}
+
+	public void setInstanceTypes(List<InstanceType> instanceTypes) {
+		this.instanceTypes = instanceTypes;
 	}
 
 	public int size() {
