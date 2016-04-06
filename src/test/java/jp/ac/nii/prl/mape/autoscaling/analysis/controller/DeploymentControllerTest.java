@@ -126,17 +126,13 @@ public class DeploymentControllerTest {
 		Instance vm1 = new Instance();
 		vm1.setCpus(4);
 		vm1.setId("1");
-		vm1.setLoad1(3.55);
-		vm1.setLoad5(3.40);
-		vm1.setLoad10(3.25);
+		vm1.setLoad(3.55);
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
 		vm2.setCpus(2);
 		vm2.setId("1");
-		vm2.setLoad1(1.55);
-		vm2.setLoad5(1.40);
-		vm2.setLoad10(1.25);
+		vm2.setLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
 		first.setVms(vms);
@@ -196,17 +192,13 @@ public class DeploymentControllerTest {
 		Instance vm1 = new Instance();
 		vm1.setCpus(4);
 		vm1.setId("1");
-		vm1.setLoad1(3.55);
-		vm1.setLoad5(3.40);
-		vm1.setLoad10(3.25);
+		vm1.setLoad(3.55);
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
 		vm2.setCpus(2);
 		vm2.setId("2");
-		vm2.setLoad1(1.55);
-		vm2.setLoad5(1.40);
-		vm2.setLoad10(1.25);
+		vm2.setLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
 		first.setVms(vms);
@@ -219,14 +211,10 @@ public class DeploymentControllerTest {
 			.andExpect(jsonPath("$", hasSize(2)))
 			.andExpect(jsonPath("$[0].id", is("1")))
 			.andExpect(jsonPath("$[0].cpus", is(4)))
-			.andExpect(jsonPath("$[0].load1", is(3.55)))
-			.andExpect(jsonPath("$[0].load5", is(3.40)))
-			.andExpect(jsonPath("$[0].load10", is(3.25)))
+			.andExpect(jsonPath("$[0].instLoad", is(3.55)))
 			.andExpect(jsonPath("$[1].id", is("2")))
 			.andExpect(jsonPath("$[1].cpus", is(2)))
-			.andExpect(jsonPath("$[1].load1", is(1.55)))
-			.andExpect(jsonPath("$[1].load5", is(1.40)))
-			.andExpect(jsonPath("$[1].load10", is(1.25)));
+			.andExpect(jsonPath("$[1].instLoad", is(1.55)));
 		
 		verify(virtualMachineService, times(1)).findByDeploymentId(1);
 		verifyNoMoreInteractions(virtualMachineService);
@@ -240,17 +228,13 @@ public class DeploymentControllerTest {
 		Instance vm1 = new Instance();
 		vm1.setCpus(4);
 		vm1.setId("1");
-		vm1.setLoad1(3.55);
-		vm1.setLoad5(3.40);
-		vm1.setLoad10(3.25);
+		vm1.setLoad(3.55);
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
 		vm2.setCpus(2);
 		vm2.setId("2");
-		vm2.setLoad1(1.55);
-		vm2.setLoad5(1.40);
-		vm2.setLoad10(1.25);
+		vm2.setLoad(1.55);
 		vm2.setDeployment(first);
 		vms.add(vm2);
 		first.setVms(vms);

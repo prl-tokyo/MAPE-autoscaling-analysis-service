@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,9 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Instance {
-	public static final int LOAD1 = 0;
-	public static final int LOAD5 = 1;
-	public static final int LOAD10 = 2;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -26,19 +24,19 @@ public class Instance {
 	private Integer vmId;
 	
 	@NotEmpty
-	private String id;
+	private String instID;
 	
-	private double load1;
+	@NotEmpty
+	private String instType;
 	
-	private double load5;
-	
-	private double load10;
-	
+	@NotNull
+	private Double instLoad;
+
 	@Min(0)
 	private int cpus;
-	
-	public double getAverageLoadPerCPU(int type) {
-		return getLoad(type) / cpus;
+
+	public double getAverageLoadPerCPU() {
+		return getLoad() / cpus;
 	}
 
 	public int getCpus() {
@@ -50,34 +48,25 @@ public class Instance {
 	}
 	
 	public String getId() {
-		return id;
+		return instID;
 	}
 	
-	private double getLoad(int type) {
-		switch(type) {
-			case LOAD1:
-				return load1;
-			case LOAD5:
-				return load5;
-			case LOAD10:
-				return load10;
-			default:
-				return 0.00;
-		}
+	public String getInstID() {
+		return instID;
 	}
 	
-	public double getLoad1() {
-		return load1;
+	public Double getInstLoad() {
+		return instLoad;
 	}
 	
-	public double getLoad10() {
-		return load10;
+	public String getInstType() {
+		return instType;
 	}
-	
-	public double getLoad5() {
-		return load5;
+
+	private double getLoad() {
+		return instLoad;
 	}
-	
+
 	public void setCpus(int cpus) {
 		this.cpus = cpus;
 	}
@@ -87,24 +76,28 @@ public class Instance {
 	}
 	
 	public void setId(String id) {
-		this.id = id;
+		this.instID = id;
 	}
 	
-	public void setLoad1(double load1) {
-		this.load1 = load1;
+	public void setInstID(String instID) {
+		this.instID = instID;
 	}
 	
-	public void setLoad10(double load10) {
-		this.load10 = load10;
+	public void setInstLoad(Double instLoad) {
+		this.instLoad = instLoad;
 	}
 	
-	public void setLoad5(double load5) {
-		this.load5 = load5;
+	public void setInstType(String instType) {
+		this.instType = instType;
+	}
+	
+	public void setLoad(Double load) {
+		this.instLoad = load;
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("VM [%s]: %d vCPUs, load: %4.2f - %4.2f - %4.2f, deployment: %s[%s]", 
-				vmId, cpus, load1, load5, load10, deployment.getId(), id);
+		return String.format("VM [%s]: %d vCPUs, load: %4.2f, deployment: %s[%s]", 
+				vmId, cpus, instLoad, deployment.getId(), instID);
 	}
 }

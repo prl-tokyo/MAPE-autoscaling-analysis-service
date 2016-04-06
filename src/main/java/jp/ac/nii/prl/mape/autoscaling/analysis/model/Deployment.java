@@ -31,7 +31,7 @@ public class Deployment {
 	public double getLoadPerCpu(int i) {
 		double load = 0;
 		for (Instance vm:vms) {
-			load += vm.getAverageLoadPerCPU(1);
+			load += vm.getAverageLoadPerCPU();
 		}
 		return load / vms.size();
 	}
