@@ -41,6 +41,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.TestContext;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceTypeService;
@@ -58,7 +59,7 @@ public class DeploymentControllerTest {
 	private DeploymentService deploymentService;
 	
 	@Autowired
-	private InstanceService virtualMachineService;
+	private InstanceService instanceService;
 	
 	@Autowired
 	private InstanceTypeService instanceTypeService;
@@ -79,7 +80,8 @@ public class DeploymentControllerTest {
 	@Before
 	public void init() {
 		Mockito.reset(deploymentService);
-		Mockito.reset(virtualMachineService);
+		Mockito.reset(instanceService);
+		Mockito.reset(instanceTypeService);
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
@@ -88,6 +90,7 @@ public class DeploymentControllerTest {
 	public void testCreateDeployment() throws Exception {
 		Deployment deployment = new Deployment();
 		deployment.setInstances(new ArrayList<Instance>());
+		deployment.setInstanceTypes(new ArrayList<InstanceType>());
 		String content = json(deployment);
 		
 		mockMvc.perform(post("/deployment")
@@ -142,6 +145,7 @@ public class DeploymentControllerTest {
 		Deployment second = new Deployment();
 		second.setId(2);
 		second.setInstances(new ArrayList<Instance>());
+		second.setInstanceTypes(new ArrayList<InstanceType>());
 
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
 		mockMvc.perform(get("/deployment"))
@@ -194,28 +198,38 @@ public class DeploymentControllerTest {
 		Instance vm1 = new Instance();
 		vm1.setInstID("1");
 		vm1.setInstLoad(3.55);
+		vm1.setInstType("t2.micro");
 		vm1.setDeployment(first);
 		vms.add(vm1);
 		Instance vm2 = new Instance();
 		vm2.setInstID("2");
 		vm2.setInstLoad(1.55);
+		vm2.setInstType("t2.micro");
 		vm2.setDeployment(first);
 		vms.add(vm2);
+		List<InstanceType> instanceTypes = new ArrayList<>();
+		InstanceType it1 = new InstanceType();
+		it1.setId(1);
+		it1.setTypeCost(0.01d);
+		it1.setTypeCPUs(1);
+		it1.setTypeRAM(1d);
+		it1.setTypeID("t2.micro");
+		instanceTypes.add(it1);
 		first.setInstances(vms);
+		first.setInstanceTypes(instanceTypes);
+		when(instanceService.findByDeploymentId(1)).thenReturn(vms);
 		
-		when(virtualMachineService.findByDeploymentId(1)).thenReturn(vms);
-		
-		mockMvc.perform(get("/deployment/{deploymentId}/vms", 1))
+		mockMvc.perform(get("/deployment/{deploymentId}/instances", 1))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(2)))
-			.andExpect(jsonPath("$[0].id", is("1")))
+			.andExpect(jsonPath("$[0].instID", is("1")))
 			.andExpect(jsonPath("$[0].instLoad", is(3.55)))
-			.andExpect(jsonPath("$[1].id", is("2")))
+			.andExpect(jsonPath("$[1].instID", is("2")))
 			.andExpect(jsonPath("$[1].instLoad", is(1.55)));
 		
-		verify(virtualMachineService, times(1)).findByDeploymentId(1);
-		verifyNoMoreInteractions(virtualMachineService);
+		verify(instanceService, times(1)).findByDeploymentId(1);
+		verifyNoMoreInteractions(instanceService);
 	}
 	
 	@Test

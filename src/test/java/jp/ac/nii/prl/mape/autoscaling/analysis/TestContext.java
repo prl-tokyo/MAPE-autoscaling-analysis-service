@@ -17,7 +17,7 @@ public class TestContext {
 	}
 	
 	@Bean
-	public InstanceService virtualMachineService() {
+	public InstanceService instanceService() {
 		return Mockito.mock(InstanceService.class);
 	}
 	
