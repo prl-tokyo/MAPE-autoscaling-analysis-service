@@ -16,6 +16,7 @@ public class Deployment {
 	
 	@Id
 	@GeneratedValue
+	@JsonIgnore
 	private Integer id;
 	
 	@JsonIgnore
