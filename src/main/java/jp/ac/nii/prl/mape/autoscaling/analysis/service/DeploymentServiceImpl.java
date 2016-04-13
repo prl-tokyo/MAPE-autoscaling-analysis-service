@@ -46,7 +46,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 		} else if ((load <= 0.4) && (deployment.size() > 1)) {
 			adaptation.setAdapt(true);
 			adaptation.setScaleUp(false);
-			adaptation.setCpuCount(2);
+			adaptation.setCpuCount(1);
 		} else {
 			adaptation.setAdapt(false);
 		}
