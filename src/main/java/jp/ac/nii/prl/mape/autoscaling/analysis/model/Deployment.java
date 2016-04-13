@@ -9,6 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Deployment {
@@ -27,6 +28,7 @@ public class Deployment {
 	@OneToMany(mappedBy="deployment")
 	private List<InstanceType> instanceTypes;
 
+	@JsonManagedReference
 	public Adaptation getAdaptation() {
 		return adaptation;
 	}
@@ -35,10 +37,12 @@ public class Deployment {
 		return id;
 	}
 
+	@JsonManagedReference
 	public List<Instance> getInstances() {
 		return instances;
 	}
 
+	@JsonManagedReference
 	public List<InstanceType> getInstanceTypes() {
 		return instanceTypes;
 	}

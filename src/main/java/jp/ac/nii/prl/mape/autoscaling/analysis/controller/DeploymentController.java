@@ -51,7 +51,7 @@ public class DeploymentController {
 			instanceService.setInstanceType(instance);
 			instanceService.save(instance);
 		}
-
+		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(ServletUriComponentsBuilder
 				.fromCurrentRequest().path("/{id}")
@@ -66,7 +66,9 @@ public class DeploymentController {
 	
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
 	Deployment getDeployment(@PathVariable Integer deploymentId) throws DeploymentNotFoundException {
-		return this.deploymentService.findById(deploymentId).get();
+		Deployment deployment = this.deploymentService.findById(deploymentId).get();
+		deployment.setAdaptation(deploymentService.analyse(deployment));
+		return deployment;
 	}
 	
 	@RequestMapping(value = "/{deploymentId}/instances", method=RequestMethod.GET)

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -35,6 +36,7 @@ public class Instance {
 	@NotNull
 	private Double instLoad;
 
+	@JsonBackReference
 	public Deployment getDeployment() {
 		return deployment;
 	}
