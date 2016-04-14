@@ -9,12 +9,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Deployment {
 	
 	@Id
 	@GeneratedValue
+	@JsonIgnore
 	private Integer id;
 	
 	@JsonIgnore
@@ -22,38 +24,52 @@ public class Deployment {
 	private Adaptation adaptation;
 
 	@OneToMany(mappedBy="deployment")
-	private List<VirtualMachine> vms;
+	private List<Instance> instances;
+	
+	@OneToMany(mappedBy="deployment")
+	private List<InstanceType> instanceTypes;
+
+	@JsonManagedReference
+	public Adaptation getAdaptation() {
+		return adaptation;
+	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public double getLoadPerCpu(int i) {
-		double load = 0;
-		for (VirtualMachine vm:vms) {
-			load += vm.getAverageLoadPerCPU(1);
-		}
-		return load / vms.size();
+	@JsonManagedReference
+	public List<Instance> getInstances() {
+		return instances;
 	}
 
-	public List<VirtualMachine> getVms() {
-		return vms;
+	@JsonManagedReference
+	public List<InstanceType> getInstanceTypes() {
+		return instanceTypes;
 	}
-	
+
+	public void setAdaptation(Adaptation adaptation) {
+		this.adaptation = adaptation;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public void setInstances(List<Instance> instances) {
+		this.instances = instances;
+	}
 
-	public void setVms(List<VirtualMachine> vms) {
-		this.vms = vms;
+	public void setInstanceTypes(List<InstanceType> instanceTypes) {
+		this.instanceTypes = instanceTypes;
 	}
 
 	public int size() {
-		return vms.size();
+		return instances.size();
 	}
 	
 	public String toString() {
-		return String.format("Deployment %d with %d virtual machines", id, vms.size());
+		return String.format("Deployment %d with %d virtual machines", id, instances.size());
 	}
 
 }

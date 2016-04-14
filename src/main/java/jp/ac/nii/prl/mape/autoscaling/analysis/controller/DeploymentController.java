@@ -16,9 +16,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.VirtualMachine;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
-import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceTypeService;
 
 @RestController
 @RequestMapping(value="/deployment")
@@ -26,23 +28,30 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.service.VirtualMachineService;
 public class DeploymentController {
 
 	private final DeploymentService deploymentService;
-	private final VirtualMachineService virtualMachineService;
+	private final InstanceService instanceService;
+	private final InstanceTypeService instanceTypeService;
 	
 	@Autowired
 	DeploymentController(DeploymentService deploymentService, 
-			VirtualMachineService virtualMachineService) {
+			InstanceService instanceService,
+			InstanceTypeService instanceTypeService) {
 		this.deploymentService = deploymentService;
-		this.virtualMachineService = virtualMachineService;
+		this.instanceService = instanceService;
+		this.instanceTypeService = instanceTypeService;
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
 		deploymentService.save(deployment);
-		for (VirtualMachine vm:deployment.getVms()) {
-			vm.setDeployment(deployment);
-			virtualMachineService.save(vm);
+		for (InstanceType instType:deployment.getInstanceTypes()) {
+			instanceTypeService.save(instType);
 		}
-
+		for (Instance instance:deployment.getInstances()) {
+			instance.setDeployment(deployment);
+			instanceService.setInstanceType(instance);
+			instanceService.save(instance);
+		}
+		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(ServletUriComponentsBuilder
 				.fromCurrentRequest().path("/{id}")
@@ -57,12 +66,14 @@ public class DeploymentController {
 	
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
 	Deployment getDeployment(@PathVariable Integer deploymentId) throws DeploymentNotFoundException {
-		return this.deploymentService.findById(deploymentId).get();
+		Deployment deployment = this.deploymentService.findById(deploymentId).get();
+		deployment.setAdaptation(deploymentService.analyse(deployment));
+		return deployment;
 	}
 	
-	@RequestMapping(value = "/{deploymentId}/vms", method=RequestMethod.GET)
-	Collection<VirtualMachine> getVirtualMachines(@PathVariable Integer deploymentId) {
-		return this.virtualMachineService.findByDeploymentId(deploymentId);
+	@RequestMapping(value = "/{deploymentId}/instances", method=RequestMethod.GET)
+	Collection<Instance> getInstances(@PathVariable Integer deploymentId) {
+		return this.instanceService.findByDeploymentId(deploymentId);
 	}
 	
 	@RequestMapping(value = "/{deploymentId}/analysis", method=RequestMethod.GET)

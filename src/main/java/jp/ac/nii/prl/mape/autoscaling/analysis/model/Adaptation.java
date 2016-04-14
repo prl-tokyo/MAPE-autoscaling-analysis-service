@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -31,6 +32,7 @@ public class Adaptation {
 		return cpuCount;
 	}
 
+	@JsonBackReference
 	public Deployment getDeployment() {
 		return deployment;
 	}

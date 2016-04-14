@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.repository.DeploymentRepository;
 
 @Service("deploymentService")
@@ -15,6 +16,9 @@ public class DeploymentServiceImpl implements DeploymentService {
 
 	@Autowired
 	private DeploymentRepository deploymentRepository;
+	
+	@Autowired
+	private InstanceService instanceService;
 	
 	@Override
 	public Deployment save(Deployment deployment) {
@@ -33,7 +37,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 
 	@Override
 	public Adaptation analyse(Deployment deployment) {
-		double load = deployment.getLoadPerCpu(1);
+		double load = getAverageLoadPerCPU(deployment.getId());
 		Adaptation adaptation = new Adaptation();
 		if (load >= 2) {
 			adaptation.setAdapt(true);
@@ -42,11 +46,21 @@ public class DeploymentServiceImpl implements DeploymentService {
 		} else if ((load <= 0.4) && (deployment.size() > 1)) {
 			adaptation.setAdapt(true);
 			adaptation.setScaleUp(false);
-			adaptation.setCpuCount(2);
+			adaptation.setCpuCount(1);
 		} else {
 			adaptation.setAdapt(false);
 		}
 		return adaptation;
+	}
+
+	@Override
+	public Double getAverageLoadPerCPU(Integer deploymentId) {
+		Collection<Instance> instances = instanceService.findByDeploymentId(deploymentId);
+		Double load = 0d;
+		for (Instance instance:instances) {
+			load += instance.getInstLoad();
+		}
+		return load / instances.size();
 	}
 
 }
