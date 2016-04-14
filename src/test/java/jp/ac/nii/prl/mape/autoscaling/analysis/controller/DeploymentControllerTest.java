@@ -115,9 +115,7 @@ public class DeploymentControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(2)))
-			.andExpect(jsonPath("$[0].id", is(1)))
 			.andExpect(jsonPath("$[0].instances", hasSize(0)))
-			.andExpect(jsonPath("$[1].id", is(2)))
 			.andExpect(jsonPath("$[1].instances", hasSize(0)));
 
 		verify(deploymentService, times(1)).findAll();
@@ -152,9 +150,7 @@ public class DeploymentControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(2)))
-			.andExpect(jsonPath("$[0].id", is(1)))
 			.andExpect(jsonPath("$[0].instances", hasSize(2)))
-			.andExpect(jsonPath("$[1].id", is(2)))
 			.andExpect(jsonPath("$[1].instances", hasSize(0)));
 
 		verify(deploymentService, times(1)).findAll();
@@ -183,10 +179,10 @@ public class DeploymentControllerTest {
 		mockMvc.perform(get("/deployment/{deploymentId}", 1))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.id", is(1)))
 			.andExpect(jsonPath("$.instances", hasSize(0)));
 		
 		verify(deploymentService, times(1)).findById(1);
+		verify(deploymentService, times(1)).analyse(deployment);
 		verifyNoMoreInteractions(deploymentService);
 	}
 	
