@@ -18,6 +18,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.AdaptationService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceTypeService;
@@ -30,18 +31,24 @@ public class DeploymentController {
 	private final DeploymentService deploymentService;
 	private final InstanceService instanceService;
 	private final InstanceTypeService instanceTypeService;
+	private final AdaptationService adaptationService;
 	
 	@Autowired
 	DeploymentController(DeploymentService deploymentService, 
 			InstanceService instanceService,
-			InstanceTypeService instanceTypeService) {
+			InstanceTypeService instanceTypeService,
+			AdaptationService adaptationService) {
 		this.deploymentService = deploymentService;
 		this.instanceService = instanceService;
 		this.instanceTypeService = instanceTypeService;
+		this.adaptationService = adaptationService;
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
+		Adaptation adaptation = deploymentService.analyse(deployment);
+		deployment.setAdaptation(adaptation);
+		adaptationService.save(adaptation);
 		deploymentService.save(deployment);
 		for (InstanceType instType:deployment.getInstanceTypes()) {
 			instanceTypeService.save(instType);
@@ -67,7 +74,6 @@ public class DeploymentController {
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
 	Deployment getDeployment(@PathVariable Integer deploymentId) throws DeploymentNotFoundException {
 		Deployment deployment = this.deploymentService.findById(deploymentId).get();
-		deployment.setAdaptation(deploymentService.analyse(deployment));
 		return deployment;
 	}
 	
@@ -78,6 +84,6 @@ public class DeploymentController {
 	
 	@RequestMapping(value = "/{deploymentId}/analysis", method=RequestMethod.GET)
 	Adaptation getAdaptation(@PathVariable Integer deploymentId) {
-		return this.deploymentService.analyse(this.deploymentService.findById(deploymentId).get());
+		return this.adaptationService.findByDeploymentId(deploymentId).get();
 	}
 }
