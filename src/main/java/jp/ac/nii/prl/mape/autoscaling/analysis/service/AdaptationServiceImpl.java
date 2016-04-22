@@ -1,5 +1,7 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +20,10 @@ public class AdaptationServiceImpl implements AdaptationService {
 	@Override
 	public Adaptation save(Adaptation adaptation) {
 		return adaptationRepository.save(adaptation);
+	}
+
+	@Override
+	public Optional<Adaptation> findByDeploymentId(Integer deploymentId) {
+		return adaptationRepository.findByDeploymentId(deploymentId);
 	}
 }
