@@ -50,6 +50,8 @@ public class DeploymentController {
 		deployment.setAdaptation(adaptation);
 		adaptationService.save(adaptation);
 		deploymentService.save(deployment);
+		adaptation.setDeployment(deployment);
+		adaptationService.save(adaptation);
 		for (InstanceType instType:deployment.getInstanceTypes()) {
 			instanceTypeService.save(instType);
 		}
@@ -74,6 +76,8 @@ public class DeploymentController {
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
 	Deployment getDeployment(@PathVariable Integer deploymentId) throws DeploymentNotFoundException {
 		Deployment deployment = this.deploymentService.findById(deploymentId).get();
+		Adaptation adaptation = adaptationService.findByDeploymentId(deploymentId).get();
+		deployment.setAdaptation(adaptation);
 		return deployment;
 	}
 	
