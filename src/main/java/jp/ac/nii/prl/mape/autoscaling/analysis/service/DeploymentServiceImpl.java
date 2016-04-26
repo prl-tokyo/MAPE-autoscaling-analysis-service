@@ -41,7 +41,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 
 	@Override
 	public Adaptation analyse(Deployment deployment) {
-		double load = getAverageLoadPerCPU(deployment.getId());
+		double load = getAverageLoad(deployment.getId());
 		Adaptation adaptation = new Adaptation();
 		if (load >= analysisProperties.getMaxThreshold()) {
 			adaptation.setAdapt(true);
@@ -58,7 +58,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 	}
 
 	@Override
-	public Double getAverageLoadPerCPU(Integer deploymentId) {
+	public Double getAverageLoad(Integer deploymentId) {
 		Collection<Instance> instances = instanceService.findByDeploymentId(deploymentId);
 		Double load = 0d;
 		for (Instance instance:instances) {
