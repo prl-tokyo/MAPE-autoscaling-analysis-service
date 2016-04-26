@@ -46,7 +46,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 		if (load >= analysisProperties.getMaxThreshold()) {
 			adaptation.setAdapt(true);
 			adaptation.setScaleUp(true);
-			adaptation.setCpuCount(Double.valueOf(load).intValue());
+			adaptation.setCpuCount(new Double(deployment.getInstances().size() * 0.1).intValue());
 		} else if ((load <= analysisProperties.getMinThreshold()) && (deployment.size() > 1)) {
 			adaptation.setAdapt(true);
 			adaptation.setScaleUp(false);
