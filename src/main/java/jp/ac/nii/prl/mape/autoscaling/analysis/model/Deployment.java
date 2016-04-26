@@ -28,7 +28,7 @@ public class Deployment {
 	
 	@OneToMany(mappedBy="deployment")
 	private List<InstanceType> instanceTypes;
-
+	
 	@JsonManagedReference
 	public Adaptation getAdaptation() {
 		return adaptation;
@@ -46,6 +46,13 @@ public class Deployment {
 	@JsonManagedReference
 	public List<InstanceType> getInstanceTypes() {
 		return instanceTypes;
+	}
+
+	public int getNumberCPUs() {
+		int cpus = 0;
+		for (Instance instance:instances)
+			cpus += instance.getInstanceType().getTypeCPUs();
+		return cpus;
 	}
 
 	public void setAdaptation(Adaptation adaptation) {
