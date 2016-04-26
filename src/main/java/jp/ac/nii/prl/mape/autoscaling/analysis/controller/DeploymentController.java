@@ -1,6 +1,7 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.controller;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -88,6 +89,11 @@ public class DeploymentController {
 	
 	@RequestMapping(value = "/{deploymentId}/analysis", method=RequestMethod.GET)
 	Adaptation getAdaptation(@PathVariable Integer deploymentId) {
-		return this.adaptationService.findByDeploymentId(deploymentId).get();
+		Optional<Adaptation> adaptation = this.adaptationService.findByDeploymentId(deploymentId);
+		if (adaptation.isPresent())
+			return this.adaptationService.findByDeploymentId(deploymentId).get();
+		// else
+		throw new AdaptationNotFoundException(String.format("No adaptation with deployment ID %s", 
+				deploymentId));
 	}
 }
