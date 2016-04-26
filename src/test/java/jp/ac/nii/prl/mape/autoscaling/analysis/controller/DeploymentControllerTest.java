@@ -42,6 +42,7 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.AdaptationService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceTypeService;
@@ -65,6 +66,9 @@ public class DeploymentControllerTest {
 	private InstanceTypeService instanceTypeService;
 	
 	@Autowired
+	private AdaptationService adaptationService;
+	
+	@Autowired
 	private WebApplicationContext webApplicationContext;
 	
 	@Autowired
@@ -82,6 +86,7 @@ public class DeploymentControllerTest {
 		Mockito.reset(deploymentService);
 		Mockito.reset(instanceService);
 		Mockito.reset(instanceTypeService);
+		Mockito.reset(adaptationService);
 		MockitoAnnotations.initMocks(this);
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 	}
@@ -252,7 +257,7 @@ public class DeploymentControllerTest {
 		adaptation.setScaleUp(true);
 		adaptation.setDeployment(first);
 		
-		when(deploymentService.analyse(first)).thenReturn(adaptation);
+		when(adaptationService.findByDeploymentId(1)).thenReturn(Optional.of(adaptation));
 		when(deploymentService.findById(1)).thenReturn(Optional.of(first));
 		
 		mockMvc.perform(get("/deployment/{deploymentId}/analysis", 1))
@@ -262,8 +267,8 @@ public class DeploymentControllerTest {
 			.andExpect(jsonPath("$.scaleUp", is(true)))
 			.andExpect(jsonPath("$.cpuCount", is(2)));
 		
-		verify(deploymentService, times(1)).analyse(first);
-		verify(deploymentService, times(1)).findById(1);
+		verify(adaptationService, times(1)).findByDeploymentId(1);
+//		verify(deploymentService, times(1)).findById(1);
 		verifyNoMoreInteractions(deploymentService);
 	}
 	
