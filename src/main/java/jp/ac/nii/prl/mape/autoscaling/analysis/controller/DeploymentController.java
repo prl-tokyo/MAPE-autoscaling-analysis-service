@@ -91,7 +91,7 @@ public class DeploymentController {
 	Adaptation getAdaptation(@PathVariable Integer deploymentId) {
 		Optional<Adaptation> adaptation = this.adaptationService.findByDeploymentId(deploymentId);
 		if (adaptation.isPresent())
-			return this.adaptationService.findByDeploymentId(deploymentId).get();
+			return adaptation.get();
 		// else
 		throw new AdaptationNotFoundException(String.format("No adaptation with deployment ID %s", 
 				deploymentId));
