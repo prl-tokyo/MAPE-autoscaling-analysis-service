@@ -24,10 +24,6 @@ public class AnalysisProperties {
 	@Min(0)
 	@Max(1)
 	private Double minThreshold;
-	
-	@Valid
-	@NotEmpty
-	private String securityGroup;
 
 	public Double getMaxThreshold() {
 		return maxThreshold;
@@ -43,13 +39,5 @@ public class AnalysisProperties {
 
 	public void setMinThreshold(Double minThreshold) {
 		this.minThreshold = minThreshold;
-	}
-
-	public String getSecurityGroup() {
-		return securityGroup;
-	}
-
-	public void setSecurityGroup(String securityGroup) {
-		this.securityGroup = securityGroup;
 	}
 }
