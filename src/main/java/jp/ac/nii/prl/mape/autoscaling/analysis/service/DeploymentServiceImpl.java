@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.ac.nii.prl.mape.autoscaling.analysis.configuration.AnalysisProperties;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
@@ -19,6 +20,9 @@ public class DeploymentServiceImpl implements DeploymentService {
 	
 	@Autowired
 	private InstanceService instanceService;
+	
+	@Autowired
+	private AnalysisProperties analysisProperties;
 	
 	@Override
 	public Deployment save(Deployment deployment) {
@@ -39,11 +43,11 @@ public class DeploymentServiceImpl implements DeploymentService {
 	public Adaptation analyse(Deployment deployment) {
 		double load = getAverageLoadPerCPU(deployment.getId());
 		Adaptation adaptation = new Adaptation();
-		if (load >= 2) {
+		if (load >= analysisProperties.getMaxThreshold()) {
 			adaptation.setAdapt(true);
 			adaptation.setScaleUp(true);
 			adaptation.setCpuCount(Double.valueOf(load).intValue());
-		} else if ((load <= 0.4) && (deployment.size() > 1)) {
+		} else if ((load <= analysisProperties.getMinThreshold()) && (deployment.size() > 1)) {
 			adaptation.setAdapt(true);
 			adaptation.setScaleUp(false);
 			adaptation.setCpuCount(1);
