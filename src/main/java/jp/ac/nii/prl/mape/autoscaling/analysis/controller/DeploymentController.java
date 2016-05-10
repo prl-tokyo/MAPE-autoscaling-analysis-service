@@ -3,6 +3,8 @@ package jp.ac.nii.prl.mape.autoscaling.analysis.controller;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,8 @@ public class DeploymentController {
 	private final InstanceTypeService instanceTypeService;
 	private final AdaptationService adaptationService;
 	
+	private static final Logger logger = LoggerFactory.getLogger(DeploymentController.class);
+	
 	@Autowired
 	DeploymentController(DeploymentService deploymentService, 
 			InstanceService instanceService,
@@ -47,8 +51,14 @@ public class DeploymentController {
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
+		
+		logger.debug("Creating new deployment");
+		
 		Adaptation adaptation = deploymentService.analyse(deployment);
 		deployment.setAdaptation(adaptation);
+		
+		logger.debug(String.format("Analysis finished. Decision: %s", adaptation.isAdapt()));
+		
 		adaptationService.save(adaptation);
 		deploymentService.save(deployment);
 		adaptation.setDeployment(deployment);
@@ -61,6 +71,8 @@ public class DeploymentController {
 			instanceService.setInstanceType(instance);
 			instanceService.save(instance);
 		}
+		
+		logger.debug(String.format("Deployment saved with ID %s", deployment.getId()));
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(ServletUriComponentsBuilder
