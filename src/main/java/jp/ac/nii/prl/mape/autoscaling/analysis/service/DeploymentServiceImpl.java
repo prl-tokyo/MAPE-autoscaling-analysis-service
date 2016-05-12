@@ -50,7 +50,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 		
 		double load = getAverageLoad(deployment.getId());
 		
-		logger.debug(String.format("Average Load per CPU is %d", load));
+		logger.debug(String.format("Average Load per CPU is %f", load));
 		
 		Adaptation adaptation = new Adaptation();
 		if (load >= analysisProperties.getMaxThreshold()) {
@@ -87,7 +87,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 			load += instance.getInstLoad();
 		}
 		
-		logger.debug(String.format("Cumulative load of %d over %d instances. Average load is %d", 
+		logger.debug(String.format("Cumulative load of %f over %d instances. Average load is %f", 
 				load, instances.size(), load / instances.size()));
 		
 		return load / instances.size();
