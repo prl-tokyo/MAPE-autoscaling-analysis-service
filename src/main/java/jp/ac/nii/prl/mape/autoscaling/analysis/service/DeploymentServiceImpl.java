@@ -21,9 +21,6 @@ public class DeploymentServiceImpl implements DeploymentService {
 	private DeploymentRepository deploymentRepository;
 	
 	@Autowired
-	private InstanceService instanceService;
-	
-	@Autowired
 	private AnalysisProperties analysisProperties;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DeploymentServiceImpl.class);
