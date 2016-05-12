@@ -48,7 +48,7 @@ public class DeploymentServiceImpl implements DeploymentService {
 		
 		logger.debug("Starting analysis");
 		
-		double load = getAverageLoad(deployment.getId());
+		double load = getAverageLoad(deployment);
 		
 		logger.debug(String.format("Average Load per CPU is %f", load));
 		
@@ -80,8 +80,14 @@ public class DeploymentServiceImpl implements DeploymentService {
 	}
 
 	@Override
-	public Double getAverageLoad(Integer deploymentId) {
-		Collection<Instance> instances = instanceService.findByDeploymentId(deploymentId);
+	public Double getAverageLoad(Deployment deployment) {
+		assert(deployment != null);
+		
+		Collection<Instance> instances = deployment.getInstances();
+		
+		logger.debug(String.format("Found %d instances for deployment %d", 
+				instances.size(), deployment.getId()));
+		
 		Double load = 0d;
 		for (Instance instance:instances) {
 			load += instance.getInstLoad();

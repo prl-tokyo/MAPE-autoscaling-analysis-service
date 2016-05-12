@@ -16,6 +16,6 @@ public interface DeploymentService {
 	
 	Adaptation analyse(Deployment deployment);
 	
-	Double getAverageLoad(Integer deploymentId);
+	Double getAverageLoad(Deployment deployment);
 	
 }
