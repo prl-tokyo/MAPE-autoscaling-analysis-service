@@ -53,24 +53,16 @@ public class DeploymentController {
 	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
 		
 		logger.debug("Creating new deployment");
-		
+
+		deploymentService.save(deployment);
 		Adaptation adaptation = deploymentService.analyse(deployment);
 		deployment.setAdaptation(adaptation);
 		
 		logger.debug(String.format("Analysis finished. Decision: %s", adaptation.isAdapt()));
 		
 		adaptationService.save(adaptation);
-		deploymentService.save(deployment);
 		adaptation.setDeployment(deployment);
 		adaptationService.save(adaptation);
-		for (InstanceType instType:deployment.getInstanceTypes()) {
-			instanceTypeService.save(instType);
-		}
-		for (Instance instance:deployment.getInstances()) {
-			instance.setDeployment(deployment);
-			instanceService.setInstanceType(instance);
-			instanceService.save(instance);
-		}
 		
 		logger.debug(String.format("Deployment saved with ID %s", deployment.getId()));
 		
