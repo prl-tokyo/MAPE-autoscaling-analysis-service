@@ -101,15 +101,24 @@ public class DeploymentController {
 	
 	@RequestMapping(value = "/{deploymentId}/instances", method=RequestMethod.GET)
 	Collection<Instance> getInstances(@PathVariable Integer deploymentId) {
+		
+		logger.debug(String.format("Getting list of instances in deployment %s", deploymentId));
+		
 		return this.instanceService.findByDeploymentId(deploymentId);
 	}
 	
 	@RequestMapping(value = "/{deploymentId}/analysis", method=RequestMethod.GET)
 	Adaptation getAdaptation(@PathVariable Integer deploymentId) {
+		
+		logger.debug(String.format("Getting adaptation for deployment %s", deploymentId));
+		
 		Optional<Adaptation> adaptation = this.adaptationService.findByDeploymentId(deploymentId);
-		if (adaptation.isPresent())
+		if (adaptation.isPresent()) {
+			logger.debug("Adaptation found");
 			return adaptation.get();
+		}
 		// else
+		logger.debug(String.format("Could not find adaptation for deployment %s", deploymentId));
 		throw new AdaptationNotFoundException(String.format("No adaptation with deployment ID %s", 
 				deploymentId));
 	}
