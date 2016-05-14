@@ -20,9 +20,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.AdaptationService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
+import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceTypeService;
 
 @RestController
 @RequestMapping(value="/deployment")
@@ -31,6 +33,7 @@ public class DeploymentController {
 
 	private final DeploymentService deploymentService;
 	private final InstanceService instanceService;
+	private final InstanceTypeService instanceTypeService;
 	private final AdaptationService adaptationService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DeploymentController.class);
@@ -38,9 +41,11 @@ public class DeploymentController {
 	@Autowired
 	DeploymentController(DeploymentService deploymentService, 
 			InstanceService instanceService,
+			InstanceTypeService instanceTypeService,
 			AdaptationService adaptationService) {
 		this.deploymentService = deploymentService;
 		this.instanceService = instanceService;
+		this.instanceTypeService = instanceTypeService;
 		this.adaptationService = adaptationService;
 	}
 	
@@ -105,6 +110,14 @@ public class DeploymentController {
 		logger.debug(String.format("Getting list of instances in deployment %s", deploymentId));
 		
 		return this.instanceService.findByDeploymentId(deploymentId);
+	}
+	
+	@RequestMapping(value = "{deploymentId}/instancetypes", method=RequestMethod.GET)
+	Collection<InstanceType> getInstanceTypes(@PathVariable Integer deploymentId) {
+		
+		logger.debug(String.format("Getting list of instance types in deployment %s", deploymentId));
+		
+		return instanceTypeService.findByDeploymentId(deploymentId);
 	}
 	
 	@RequestMapping(value = "/{deploymentId}/analysis", method=RequestMethod.GET)

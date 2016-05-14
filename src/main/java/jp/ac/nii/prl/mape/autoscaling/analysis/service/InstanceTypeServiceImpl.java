@@ -33,4 +33,9 @@ public class InstanceTypeServiceImpl implements InstanceTypeService {
 		}
 		return null;
 	}
+
+	@Override
+	public Collection<InstanceType> findByDeploymentId(Integer deploymentId) {
+		return instanceTypeRepository.findByDeploymentId(deploymentId);
+	}
 }
