@@ -74,8 +74,26 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
-	Deployment getDeployment(@PathVariable Integer deploymentId) throws DeploymentNotFoundException {
+	Deployment getDeployment(@PathVariable Integer deploymentId) 
+			throws DeploymentNotFoundException, AdaptationNotFoundException {
+		
+		logger.debug(String.format("Getting deployment with ID %s", deploymentId));
+		
+		if (!deploymentService.findById(deploymentId).isPresent()) {
+			logger.error(String.format("No deployment with id %s", deploymentId));
+			throw new DeploymentNotFoundException(String.format("No deployment with ID %s", deploymentId));
+		}
+		
 		Deployment deployment = this.deploymentService.findById(deploymentId).get();
+		
+		if (!adaptationService.findByDeploymentId(deploymentId).isPresent()) {
+			logger.error(String.format("No adaptation for deployment %s", deploymentId));
+			throw new AdaptationNotFoundException(String.format("No adaptation for deployment %s", 
+					deploymentId));
+		}
+		
+		logger.debug("Found deployment and adaptation");
+		
 		Adaptation adaptation = adaptationService.findByDeploymentId(deploymentId).get();
 		deployment.setAdaptation(adaptation);
 		return deployment;
