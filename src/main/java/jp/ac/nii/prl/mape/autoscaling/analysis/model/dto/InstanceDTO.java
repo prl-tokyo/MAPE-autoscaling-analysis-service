@@ -19,23 +19,23 @@ public class InstanceDTO {
 		return instID;
 	}
 
-	public void setInstID(String instID) {
-		this.instID = instID;
+	public Double getInstLoad() {
+		return instLoad;
 	}
 
 	public String getInstType() {
 		return instType;
 	}
 
-	public void setInstType(String instType) {
-		this.instType = instType;
-	}
-
-	public Double getInstLoad() {
-		return instLoad;
+	public void setInstID(String instID) {
+		this.instID = instID;
 	}
 
 	public void setInstLoad(Double instLoad) {
 		this.instLoad = instLoad;
+	}
+
+	public void setInstType(String instType) {
+		this.instType = instType;
 	}
 }
