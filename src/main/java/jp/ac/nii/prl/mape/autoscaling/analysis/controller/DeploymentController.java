@@ -1,5 +1,6 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -21,6 +22,11 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.AdaptationDTO;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.DeploymentDTO;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.DeploymentFactory;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.InstanceDTO;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.InstanceTypeDTO;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.AdaptationService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
@@ -50,9 +56,11 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<?> createDeployment(@RequestBody Deployment deployment) {
+	public ResponseEntity<?> createDeployment(@RequestBody DeploymentDTO deploymentDTO) {
 		
 		logger.debug("Creating new deployment");
+		
+		Deployment deployment = DeploymentFactory.createDeployment(deploymentDTO);
 
 		deploymentService.save(deployment);
 		Adaptation adaptation = deploymentService.analyse(deployment);
@@ -74,12 +82,19 @@ public class DeploymentController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public Collection<Deployment> getAllDeployments() {
-		return deploymentService.findAll();
+	public Collection<DeploymentDTO> getAllDeployments() {
+		
+		Collection<Deployment> deployments = deploymentService.findAll();
+		
+		Collection<DeploymentDTO> dtos = new ArrayList<>();
+		for (Deployment deployment:deployments)
+			dtos.add(DeploymentFactory.createDeploymentDTO(deployment));
+		
+		return dtos;
 	}
 	
 	@RequestMapping(value = "/{deploymentId}", method=RequestMethod.GET)
-	Deployment getDeployment(@PathVariable Integer deploymentId) 
+	DeploymentDTO getDeployment(@PathVariable Integer deploymentId) 
 			throws DeploymentNotFoundException, AdaptationNotFoundException {
 		
 		logger.debug(String.format("Getting deployment with ID %s", deploymentId));
@@ -101,34 +116,42 @@ public class DeploymentController {
 		
 		Adaptation adaptation = adaptationService.findByDeploymentId(deploymentId).get();
 		deployment.setAdaptation(adaptation);
-		return deployment;
+		return DeploymentFactory.createDeploymentDTO(deployment);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/{deploymentId}/instances", method=RequestMethod.GET)
-	Collection<Instance> getInstances(@PathVariable Integer deploymentId) {
+	Collection<InstanceDTO> getInstances(@PathVariable Integer deploymentId) {
 		
 		logger.debug(String.format("Getting list of instances in deployment %s", deploymentId));
 		
-		return this.instanceService.findByDeploymentId(deploymentId);
+		Collection<Instance> instances = instanceService.findByDeploymentId(deploymentId);
+		
+		return (Collection<InstanceDTO>) instances.stream()
+				.map(inst -> DeploymentFactory.createInstanceDTO(inst));
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "{deploymentId}/instancetypes", method=RequestMethod.GET)
-	Collection<InstanceType> getInstanceTypes(@PathVariable Integer deploymentId) {
+	Collection<InstanceTypeDTO> getInstanceTypes(@PathVariable Integer deploymentId) {
 		
 		logger.debug(String.format("Getting list of instance types in deployment %s", deploymentId));
 		
-		return instanceTypeService.findByDeploymentId(deploymentId);
+		Collection<InstanceType> instanceTypes = instanceTypeService.findByDeploymentId(deploymentId);
+		
+		return (Collection<InstanceTypeDTO>) instanceTypes.stream()
+				.map(it -> DeploymentFactory.createInstanceTypeDTO(it));
 	}
 	
 	@RequestMapping(value = "/{deploymentId}/analysis", method=RequestMethod.GET)
-	Adaptation getAdaptation(@PathVariable Integer deploymentId) {
+	AdaptationDTO getAdaptation(@PathVariable Integer deploymentId) {
 		
 		logger.debug(String.format("Getting adaptation for deployment %s", deploymentId));
 		
 		Optional<Adaptation> adaptation = this.adaptationService.findByDeploymentId(deploymentId);
 		if (adaptation.isPresent()) {
 			logger.debug("Adaptation found");
-			return adaptation.get();
+			return DeploymentFactory.createAdaptationDTO(adaptation.get());
 		}
 		// else
 		logger.debug(String.format("Could not find adaptation for deployment %s", deploymentId));
