@@ -2,39 +2,35 @@ package jp.ac.nii.prl.mape.autoscaling.analysis.model.dto;
 
 import java.util.List;
 
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
-import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
-
 public class DeploymentDTO {
 
-	private Adaptation adaptation;
+	private AdaptationDTO adaptation;
 
-	private List<Instance> instances;
+	private List<InstanceDTO> instances;
 
-	private List<InstanceType> instanceTypes;
+	private List<InstanceTypeDTO> instanceTypes;
 
-	public Adaptation getAdaptation() {
+	public AdaptationDTO getAdaptation() {
 		return adaptation;
 	}
 
-	public List<Instance> getInstances() {
+	public List<InstanceDTO> getInstances() {
 		return instances;
 	}
 
-	public List<InstanceType> getInstanceTypes() {
+	public List<InstanceTypeDTO> getInstanceTypes() {
 		return instanceTypes;
 	}
 
-	public void setAdaptation(Adaptation adaptation) {
+	public void setAdaptation(AdaptationDTO adaptation) {
 		this.adaptation = adaptation;
 	}
 
-	public void setInstances(List<Instance> instances) {
+	public void setInstances(List<InstanceDTO> instances) {
 		this.instances = instances;
 	}
 	
-	public void setInstanceTypes(List<InstanceType> instanceTypes) {
+	public void setInstanceTypes(List<InstanceTypeDTO> instanceTypes) {
 		this.instanceTypes = instanceTypes;
 	}
 
