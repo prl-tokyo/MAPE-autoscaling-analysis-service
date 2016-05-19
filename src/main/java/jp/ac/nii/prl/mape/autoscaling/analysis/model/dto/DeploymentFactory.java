@@ -36,12 +36,28 @@ public class DeploymentFactory {
 		return dto;
 	}
 	
-	public static Instance createInstance(InstanceDTO dto) {
-		return null;
+	public static Instance createInstance(InstanceDTO dto, 
+			Deployment deployment, 
+			InstanceType instanceType) {
+		Instance instance = new Instance();
+		
+		instance.setDeployment(deployment);
+		instance.setInstanceType(instanceType);
+		instance.setInstID(dto.getInstID());
+		instance.setInstLoad(dto.getInstLoad());
+		instance.setInstType(dto.getInstType());
+				
+		return instance;
 	}
 	
 	public static InstanceDTO createInstanceDTO(Instance instance) {
-		return null;
+		InstanceDTO dto = new InstanceDTO();
+		
+		dto.setInstID(instance.getInstID());
+		dto.setInstLoad(instance.getInstLoad());
+		dto.setInstType(instance.getInstType());
+		
+		return dto;
 	}
 	
 	public static InstanceType createInstanceType(InstanceTypeDTO dto) {
