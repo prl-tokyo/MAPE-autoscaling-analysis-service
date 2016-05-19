@@ -15,12 +15,25 @@ public class DeploymentFactory {
 		return null;
 	}
 	
-	public static Adaptation createAdaptation(AdaptationDTO dto) {
-		return null;
+	public static Adaptation createAdaptation(AdaptationDTO dto, Deployment deployment) {
+		Adaptation adaptation = new Adaptation();
+		
+		adaptation.setAdapt(dto.isAdapt());
+		adaptation.setCpuCount(dto.getCpuCount());
+		adaptation.setScaleUp(dto.isScaleUp());
+		adaptation.setDeployment(deployment);
+		
+		return adaptation;
 	}
 	
 	public static AdaptationDTO createAdaptationDTO(Adaptation adaptation) {
-		return null;
+		AdaptationDTO dto = new AdaptationDTO();
+		
+		dto.setAdapt(adaptation.isAdapt());
+		dto.setCpuCount(adaptation.getCpuCount());
+		dto.setScaleUp(adaptation.isScaleUp());
+		
+		return dto;
 	}
 	
 	public static Instance createInstance(InstanceDTO dto) {
