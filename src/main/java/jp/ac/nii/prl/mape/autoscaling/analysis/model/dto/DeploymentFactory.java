@@ -1,5 +1,7 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.model.dto;
 
+import java.util.List;
+
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
@@ -60,12 +62,30 @@ public class DeploymentFactory {
 		return dto;
 	}
 	
-	public static InstanceType createInstanceType(InstanceTypeDTO dto) {
-		return null;
+	public static InstanceType createInstanceType(InstanceTypeDTO dto,
+			Deployment deployment,
+			List<Instance> instances) {
+		InstanceType instanceType = new InstanceType();
+		
+		instanceType.setDeployment(deployment);
+		instanceType.setInstances(instances);
+		instanceType.setTypeCost(dto.getTypeCost());
+		instanceType.setTypeCPUs(dto.getTypeCPUs());
+		instanceType.setTypeID(dto.getTypeID());
+		instanceType.setTypeRAM(dto.getTypeRAM());
+		
+		return instanceType;
 	}
 	
 	public static InstanceTypeDTO createInstanceTypeDTO(InstanceType instanceType) {
-		return null;
+		InstanceTypeDTO dto = new InstanceTypeDTO();
+		
+		dto.setTypeCost(instanceType.getTypeCost());
+		dto.setTypeCPUs(instanceType.getTypeCPUs());
+		dto.setTypeID(instanceType.getTypeID());
+		dto.setTypeRAM(instanceType.getTypeRAM());
+		
+		return dto;
 	}
 
 }
