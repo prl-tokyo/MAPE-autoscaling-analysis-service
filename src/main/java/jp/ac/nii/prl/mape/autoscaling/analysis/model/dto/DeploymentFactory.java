@@ -18,6 +18,8 @@ public class DeploymentFactory {
 	private final static Logger logger = LoggerFactory.getLogger(DeploymentFactory.class);
 
 	public static Deployment createDeployment(DeploymentDTO dto) {
+		logger.trace("Creating Deployment from DeploymentDTO");
+		
 		Deployment deployment = new Deployment();
 		
 		deployment.setAdaptation(createAdaptation(dto.getAdaptation(), deployment));
@@ -26,6 +28,7 @@ public class DeploymentFactory {
 		List<Instance> instances = new ArrayList<>();
 		for (InstanceDTO instanceDTO:dto.getInstances()) {
 			map.add(instanceDTO.getInstType(), instanceDTO.getInstID());
+			// we don't have instance types yet, so we're using null, and add it later
 			instances.add(createInstance(instanceDTO, deployment, null));
 		}
 		deployment.setInstances(instances);
@@ -60,10 +63,16 @@ public class DeploymentFactory {
 			}
 		}
 		
+		logger.trace(String.format("Done creating Deployment from DeploymentDTO: %d instances, "
+				+ "and %d instance types", 
+				deployment.getInstances().size(), 
+				deployment.getInstanceTypes().size()));
 		return deployment;
 	}
 	
 	public static DeploymentDTO createDeploymentDTO(Deployment deployment) {
+		logger.trace("Creating DeploymentDTO from Deployment");
+		
 		DeploymentDTO dto = new DeploymentDTO();
 		
 		dto.setAdaptation(createAdaptationDTO(deployment.getAdaptation()));
@@ -77,6 +86,10 @@ public class DeploymentFactory {
 		for (InstanceType instanceType:deployment.getInstanceTypes())
 			instanceTypeDTOs.add(createInstanceTypeDTO(instanceType));
 		dto.setInstanceTypes(instanceTypeDTOs);
+		
+		logger.trace(String.format("Creating DeploymentDTO: %d instances, %d instance types", 
+				dto.getInstances().size(), 
+				dto.getInstanceTypes().size()));
 		
 		return dto;
 	}
