@@ -92,6 +92,7 @@ public class Deployment {
 		return instances.size();
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("Deployment %d with %d virtual machines", id, instances.size());
 	}
