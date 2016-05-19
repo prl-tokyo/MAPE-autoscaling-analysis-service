@@ -1,6 +1,7 @@
 package jp.ac.nii.prl.mape.autoscaling.analysis.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,11 +39,27 @@ public class Deployment {
 		return id;
 	}
 
+	public Optional<Instance> getInstanceByInstID(String instID) {
+		for (Instance instance:instances) {
+			if (instance.getInstID().equals(instID))
+				return Optional.of(instance);
+		}
+		return Optional.empty();
+	}
+	
+	public Optional<InstanceType> getInstanceTypeByInstType(String instType) {
+		for (InstanceType instanceType:instanceTypes) {
+			if (instanceType.getTypeID().equals(instType))
+				return Optional.of(instanceType);
+		}
+		return Optional.empty();
+	}
+
 	@JsonManagedReference
 	public List<Instance> getInstances() {
 		return instances;
 	}
-
+	
 	@JsonManagedReference
 	public List<InstanceType> getInstanceTypes() {
 		return instanceTypes;
