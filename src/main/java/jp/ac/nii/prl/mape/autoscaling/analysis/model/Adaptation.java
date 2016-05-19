@@ -69,6 +69,7 @@ public class Adaptation {
 		this.scaleUp = scaleUp;
 	}
 	
+	@Override
 	public String toString() {
 		String str = "Adaptation ";
 		if (!adapt)
