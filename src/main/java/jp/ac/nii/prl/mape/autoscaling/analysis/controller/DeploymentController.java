@@ -61,6 +61,11 @@ public class DeploymentController {
 		logger.debug("Creating new deployment");
 		
 		Deployment deployment = DeploymentFactory.createDeployment(deploymentDTO);
+		
+		logger.trace(String.format("Deployment created from DTO, with %d instances and %d "
+				+ "instance types", 
+				deployment.getInstances().size(), 
+				deployment.getInstanceTypes().size()));
 
 		deploymentService.save(deployment);
 		Adaptation adaptation = deploymentService.analyse(deployment);
@@ -84,11 +89,17 @@ public class DeploymentController {
 	@RequestMapping(method=RequestMethod.GET)
 	public Collection<DeploymentDTO> getAllDeployments() {
 		
+		logger.debug("Getting all deployments");
+		
 		Collection<Deployment> deployments = deploymentService.findAll();
+		
+		logger.debug(String.format("Found %d deployments", deployments.size()));
 		
 		Collection<DeploymentDTO> dtos = new ArrayList<>();
 		for (Deployment deployment:deployments)
 			dtos.add(DeploymentFactory.createDeploymentDTO(deployment));
+		
+		logger.debug("Created DTOs from deployments");
 		
 		return dtos;
 	}
@@ -127,6 +138,8 @@ public class DeploymentController {
 		
 		Collection<Instance> instances = instanceService.findByDeploymentId(deploymentId);
 		
+		logger.trace(String.format("Found %d instances", instances.size()));
+		
 		return (Collection<InstanceDTO>) instances.stream()
 				.map(inst -> DeploymentFactory.createInstanceDTO(inst));
 	}
@@ -138,6 +151,8 @@ public class DeploymentController {
 		logger.debug(String.format("Getting list of instance types in deployment %s", deploymentId));
 		
 		Collection<InstanceType> instanceTypes = instanceTypeService.findByDeploymentId(deploymentId);
+		
+		logger.trace(String.format("Found %d instance types", instanceTypes.size()));
 		
 		return (Collection<InstanceTypeDTO>) instanceTypes.stream()
 				.map(it -> DeploymentFactory.createInstanceTypeDTO(it));
