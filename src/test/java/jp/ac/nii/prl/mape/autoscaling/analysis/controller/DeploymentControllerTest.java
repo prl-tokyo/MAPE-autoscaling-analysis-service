@@ -42,6 +42,10 @@ import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.AdaptationDTO;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.DeploymentDTO;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.InstanceDTO;
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.dto.InstanceTypeDTO;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.AdaptationService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.DeploymentService;
 import jp.ac.nii.prl.mape.autoscaling.analysis.service.InstanceService;
@@ -92,10 +96,15 @@ public class DeploymentControllerTest {
 	}
 	
 	@Test
-	public void testCreateDeployment() throws Exception {
-		Deployment deployment = new Deployment();
-		deployment.setInstances(new ArrayList<Instance>());
-		deployment.setInstanceTypes(new ArrayList<InstanceType>());
+	public void testCreateDeploymentDTO() throws Exception {
+		DeploymentDTO deployment = new DeploymentDTO();
+		deployment.setInstances(new ArrayList<InstanceDTO>());
+		deployment.setInstanceTypes(new ArrayList<InstanceTypeDTO>());
+		AdaptationDTO adaptation = new AdaptationDTO();
+		adaptation.setAdapt(true);
+		adaptation.setCpuCount(1);
+		adaptation.setScaleUp(true);
+		deployment.setAdaptation(adaptation);
 		String content = json(deployment);
 		
 		mockMvc.perform(post("/deployment")
@@ -149,8 +158,24 @@ public class DeploymentControllerTest {
 		second.setId(2);
 		second.setInstances(new ArrayList<Instance>());
 		second.setInstanceTypes(new ArrayList<InstanceType>());
+		
+		Adaptation adaptation1 = new Adaptation();
+		adaptation1.setAdapt(true);
+		adaptation1.setCpuCount(4);
+		adaptation1.setDeployment(first);
+		adaptation1.setId(1);
+		adaptation1.setScaleUp(true);
+		
+		Adaptation adaptation2 = new Adaptation();
+		adaptation1.setAdapt(true);
+		adaptation1.setCpuCount(4);
+		adaptation1.setDeployment(second);
+		adaptation1.setId(2);
+		adaptation1.setScaleUp(true);
 
 		when(deploymentService.findAll()).thenReturn(Arrays.asList(first, second));
+		when(adaptationService.findByDeploymentId(1)).thenReturn(Optional.of(adaptation1));
+		when(adaptationService.findByDeploymentId(2)).thenReturn(Optional.of(adaptation2));
 		mockMvc.perform(get("/deployment"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -159,7 +184,10 @@ public class DeploymentControllerTest {
 			.andExpect(jsonPath("$[1].instances", hasSize(0)));
 
 		verify(deploymentService, times(1)).findAll();
+		verify(adaptationService, times(1)).findByDeploymentId(1);
+		verify(adaptationService, times(1)).findByDeploymentId(2);
 		verifyNoMoreInteractions(deploymentService);
+		verifyNoMoreInteractions(adaptationService);
 	}
 	
 	@Test
@@ -268,7 +296,6 @@ public class DeploymentControllerTest {
 			.andExpect(jsonPath("$.cpuCount", is(2)));
 		
 		verify(adaptationService, times(1)).findByDeploymentId(1);
-//		verify(deploymentService, times(1)).findById(1);
 		verifyNoMoreInteractions(deploymentService);
 	}
 	
