@@ -69,5 +69,47 @@ public class DeploymentFactoryTest {
 		Assert.assertEquals(deployment, instanceType.getDeployment());
 		Assert.assertEquals(instances, instanceType.getInstances());
 	}
+	
+	@Test
+	public void instanceToDTO() {
+		Deployment deployment = new Deployment();
+		InstanceType instanceType = new InstanceType();
+		
+		Instance instance = new Instance();
+		
+		instance.setDeployment(deployment);
+		instance.setId(1);
+		instance.setInstanceType(instanceType);
+		instance.setInstID("i-68def98");
+		instance.setInstLoad(0.06d);
+		instance.setInstType("t2.micro");
+		
+		InstanceDTO dto = DeploymentFactory.createInstanceDTO(instance);
+		
+		Assert.assertEquals(instance.getInstID(), dto.getInstID());
+		Assert.assertEquals(instance.getInstLoad(), dto.getInstLoad());
+		Assert.assertEquals(instance.getInstType(), dto.getInstType());
+	}
+	
+	@Test
+	public void instanceDTOToInstance() {
+		
+		InstanceDTO dto = new InstanceDTO();
+		
+		dto.setInstID("i-68def98");
+		dto.setInstLoad(0.55d);
+		dto.setInstType("t2.large");
+		
+		Deployment deployment = new Deployment();
+		InstanceType instanceType = new InstanceType();
+		
+		Instance instance = DeploymentFactory.createInstance(dto, deployment, instanceType);
+		
+		Assert.assertEquals(dto.getInstID(), instance.getInstID());
+		Assert.assertEquals(dto.getInstType(), instance.getInstType());
+		Assert.assertEquals(dto.getInstLoad(), instance.getInstLoad());
+		Assert.assertEquals(deployment, instance.getDeployment());
+		Assert.assertEquals(instanceType, instance.getInstanceType());
+	}
 
 }
