@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import jp.ac.nii.prl.mape.autoscaling.analysis.model.Adaptation;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Deployment;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.Instance;
 import jp.ac.nii.prl.mape.autoscaling.analysis.model.InstanceType;
@@ -28,7 +29,8 @@ public class DeploymentFactoryTest {
 	}
 	
 	@Test
-	public void instanceTypeToDTO() {
+	public void testInstanceTypeToDTO() {
+		
 		Deployment deployment = new Deployment();
 		
 		InstanceType instanceType = new InstanceType();
@@ -46,10 +48,12 @@ public class DeploymentFactoryTest {
 		Assert.assertEquals(dto.getTypeCost(), instanceType.getTypeCost());
 		Assert.assertEquals(dto.getTypeCPUs(), instanceType.getTypeCPUs());
 		Assert.assertEquals(dto.getTypeRAM(), instanceType.getTypeRAM());
+		
 	}
 	
 	@Test
-	public void instanceTypeDTOToInstanceType() {
+	public void testInstanceTypeDTOToInstanceType() {
+		
 		InstanceTypeDTO dto = new InstanceTypeDTO();
 		
 		dto.setTypeCost(1.0d);
@@ -68,10 +72,12 @@ public class DeploymentFactoryTest {
 		Assert.assertEquals(dto.getTypeRAM(), instanceType.getTypeRAM());
 		Assert.assertEquals(deployment, instanceType.getDeployment());
 		Assert.assertEquals(instances, instanceType.getInstances());
+		
 	}
 	
 	@Test
-	public void instanceToDTO() {
+	public void testInstanceToDTO() {
+		
 		Deployment deployment = new Deployment();
 		InstanceType instanceType = new InstanceType();
 		
@@ -89,10 +95,11 @@ public class DeploymentFactoryTest {
 		Assert.assertEquals(instance.getInstID(), dto.getInstID());
 		Assert.assertEquals(instance.getInstLoad(), dto.getInstLoad());
 		Assert.assertEquals(instance.getInstType(), dto.getInstType());
+		
 	}
 	
 	@Test
-	public void instanceDTOToInstance() {
+	public void testInstanceDTOToInstance() {
 		
 		InstanceDTO dto = new InstanceDTO();
 		
@@ -110,6 +117,55 @@ public class DeploymentFactoryTest {
 		Assert.assertEquals(dto.getInstLoad(), instance.getInstLoad());
 		Assert.assertEquals(deployment, instance.getDeployment());
 		Assert.assertEquals(instanceType, instance.getInstanceType());
+		
+	}
+	
+	@Test
+	public void testAdaptationToDTO() {
+		
+		Deployment deployment = new Deployment();
+		Adaptation adaptation = new Adaptation();
+		
+		adaptation.setAdapt(true);
+		adaptation.setCpuCount(2);
+		adaptation.setDeployment(deployment);
+		adaptation.setId(1);
+		adaptation.setScaleUp(true);
+		
+		AdaptationDTO dto = DeploymentFactory.createAdaptationDTO(adaptation);
+		
+		Assert.assertEquals(adaptation.getCpuCount(), dto.getCpuCount());
+		Assert.assertEquals(adaptation.isAdapt(), dto.isAdapt());
+		Assert.assertEquals(adaptation.isScaleUp(), dto.isScaleUp());
+		
+	}
+	
+	@Test
+	public void testAdaptationDTOToAdaptation() {
+		
+		Deployment deployment = new Deployment();
+		AdaptationDTO dto = new AdaptationDTO();
+		
+		dto.setAdapt(true);
+		dto.setCpuCount(4);
+		dto.setScaleUp(false);
+		
+		Adaptation adaptation = DeploymentFactory.createAdaptation(dto, deployment);
+		
+		Assert.assertEquals(dto.isAdapt(), adaptation.isAdapt());
+		Assert.assertEquals(dto.getCpuCount(), adaptation.getCpuCount());
+		Assert.assertEquals(dto.isScaleUp(), adaptation.isScaleUp());
+		Assert.assertEquals(deployment, adaptation.getDeployment());
+		
 	}
 
+	@Test
+	public void testDeploymentToDTO() {
+		Assert.assertTrue(false);
+	}
+	
+	@Test
+	public void testDeploymentDTOToDeployment() {
+		Assert.assertTrue(false);
+	}
 }
