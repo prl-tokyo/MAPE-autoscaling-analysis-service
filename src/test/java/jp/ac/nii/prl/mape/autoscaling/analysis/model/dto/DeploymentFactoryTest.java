@@ -160,12 +160,43 @@ public class DeploymentFactoryTest {
 	}
 
 	@Test
-	public void testDeploymentToDTO() {
-		Assert.assertTrue(false);
+	public void testEmptyDeploymentToDTO() {
+		
+		Deployment deployment = new Deployment();
+		Adaptation adaptation = new Adaptation();
+		
+		adaptation.setAdapt(false);
+		
+		deployment.setId(1);
+		deployment.setAdaptation(adaptation);
+		deployment.setInstances(new ArrayList<Instance>());
+		deployment.setInstanceTypes(new ArrayList<InstanceType>());
+		
+		DeploymentDTO dto = DeploymentFactory.createDeploymentDTO(deployment);
+		
+		Assert.assertEquals(0, dto.getInstances().size());
+		Assert.assertEquals(0, dto.getInstances().size());
+		Assert.assertEquals(adaptation.isAdapt(), dto.getAdaptation().isAdapt());
+		
 	}
 	
 	@Test
-	public void testDeploymentDTOToDeployment() {
-		Assert.assertTrue(false);
+	public void testEmptyDeploymentDTOToDeployment() {
+		
+		DeploymentDTO dto = new DeploymentDTO();
+		AdaptationDTO adaptation = new AdaptationDTO();
+		
+		adaptation.setAdapt(false);
+		
+		dto.setAdaptation(adaptation);
+		dto.setInstances(new ArrayList<InstanceDTO>());
+		dto.setInstanceTypes(new ArrayList<InstanceTypeDTO>());
+		
+		Deployment deployment = DeploymentFactory.createDeployment(dto);
+		
+		Assert.assertEquals(adaptation.isAdapt(), deployment.getAdaptation().isAdapt());
+		Assert.assertEquals(0, deployment.getInstances().size());
+		Assert.assertEquals(0, deployment.getInstanceTypes().size());
+		
 	}
 }
